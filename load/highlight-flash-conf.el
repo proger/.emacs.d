@@ -1,7 +1,7 @@
 ;; highlight expression on eval
+
+(unless (package-installed-p 'highlight) (package-install 'highlight)) 
 (require 'highlight)
-(require 'eval-sexp-fu)
-(setq eval-sexp-fu-flash-duration 0.5)
 
 (defun live-bounds-of-preceding-sexp ()
   "Return the bounds of sexp before the point. Copies semantics
@@ -69,38 +69,9 @@
   (define-eval-sexp-fu-flash-command eval-defun
     (eval-sexp-fu-flash (live-bounds-of-defun))))
 
-(live-esf-initialize-elisp)
+(use-package eval-sexp-fu
+  :ensure t
+  :config
+  (setq eval-sexp-fu-flash-duration 0.5)
+  (live-esf-initialize-elisp))
 
-;; cider extensions
-
-
-(defun live-bounds-of-cider-last-sexp ()
-  "Return the bounds of the defun around point. Copies semantics
-   directly from the fn cider-last-sexp to ensure highlighted
-   area is identical to that which is evaluated."
-  (cons (save-excursion (backward-sexp) (point)) (point)))
-
-(defun live-esf-initialize-cider ()
-  (define-eval-sexp-fu-flash-command cider-eval-last-sexp
-    (eval-sexp-fu-flash (live-bounds-of-cider-last-sexp)))
-
-  (define-eval-sexp-fu-flash-command cider-pprint-eval-last-sexp
-    (eval-sexp-fu-flash (live-bounds-of-cider-last-sexp)))
-
-  (define-eval-sexp-fu-flash-command cider-eval-defun-at-point
-    (eval-sexp-fu-flash (let ((bounds (cider--region-for-defun-at-point)))
-                          (cons (first bounds) (second bounds)))))
-
-
-  (progn
-    ;; Defines:
-    ;; `eval-sexp-fu-cider-sexp-inner-list',
-    ;; `eval-sexp-fu-cider-sexp-inner-sexp'
-    ;; and the pprint variants respectively.
-    (define-eval-sexp-fu-eval-sexp eval-sexp-fu-cider-eval-sexp
-      cider-eval-last-sexp)
-    (define-eval-sexp-fu-eval-sexp eval-sexp-fu-cider-pprint-eval-sexp
-      cider-pprint-eval-last-sexp)))
-
-(eval-after-load 'cider
-  '(live-esf-initialize-cider))

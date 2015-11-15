@@ -29,32 +29,6 @@
 (when (fboundp 'winner-mode)
       (winner-mode 1))
 
-(setq initial-major-mode 'lisp-interaction-mode
-      redisplay-dont-pause t
-      column-number-mode t
-      echo-keystrokes 0.02
-      inhibit-startup-message t
-      transient-mark-mode t
-      shift-select-mode nil
-      require-final-newline t
-      truncate-partial-width-windows nil
-      delete-by-moving-to-trash nil
-      confirm-nonexistent-file-or-buffer nil
-      query-replace-highlight t
-      next-error-highlight t
-      next-error-highlight-no-select t)
-
-;;set all coding systems to utf-8
-(set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-;;disable CJK coding/encoding (Chinese/Japanese/Korean characters)
-(setq utf-translate-cjk-mode nil)
-
 (set-default 'indent-tabs-mode nil)
 (auto-compression-mode t)
 (show-paren-mode 1)

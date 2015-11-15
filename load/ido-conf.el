@@ -1,74 +1,47 @@
-(require 'idomenu)
+(require 'recentf)
 
-(require 'flx-ido)
+(use-package ido
+  :ensure t
+  :bind (("C-x f" . ido-recentf-open))
+  :config
+  (ido-mode t)
+  (setq ido-ignore-buffers (list "\\` "))
+  (add-to-list 'ido-ignore-files "\\.DS_Store")
+  (setq ido-enable-prefix nil
+        ido-create-new-buffer 'always
+        ido-max-prospects 10
+        ido-default-file-method 'selected-window
+        ido-everywhere 1))
 
-(ido-mode t)
-(flx-ido-mode 1)
-(setq ido-enable-prefix nil
-      ido-create-new-buffer 'always
-      ido-max-prospects 10
-      ido-default-file-method 'selected-window
-      ido-everywhere 1)
+;(use-package flx
+;  :ensure t)
+
+(use-package flx-ido
+  :ensure t
+  :config (flx-ido-mode 1))
+
+(use-package idomenu
+  :ensure t
+  :bind (("C-x C-i" . idomenu)))
 
 (icomplete-mode 1)
 
 (defvar live-symbol-names)
 (defvar live-name-and-pos)
 
-(defun live-recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
+(setq recentf-max-saved-items 25)
+(recentf-mode t)
 
-(defun live-ido-goto-symbol (&optional symbol-list)
-      "Refresh imenu and jump to a place in the buffer using Ido."
-      (interactive)
-      (unless (featurep 'imenu)
-        (require 'imenu nil t))
-      (cond
-       ((not symbol-list)
-        (let ((ido-mode ido-mode)
-              (ido-enable-flex-matching
-               (if (boundp 'ido-enable-flex-matching)
-                   ido-enable-flex-matching t))
-              live-name-and-pos live-symbol-names position selected-symbol)
-          (unless ido-mode
-            (ido-mode 1)
-            (setq ido-enable-flex-matching t))
-          (while (progn
-                   (imenu--cleanup)
-                   (setq imenu--index-alist nil)
-                   (live-ido-goto-symbol (imenu--make-index-alist))
-                   (setq selected-symbol
-                         (ido-completing-read "Symbol? " live-symbol-names))
-                   (string= (car imenu--rescan-item) selected-symbol)))
-          (unless (and (boundp 'mark-active) mark-active)
-            (push-mark nil t nil))
-          (setq position (cdr (assoc selected-symbol live-name-and-pos)))
-          (cond
-           ((overlayp position)
-            (goto-char (overlay-start position)))
-           (t
-            (goto-char position)))))
-       ((listp symbol-list)
-        (dolist (symbol symbol-list)
-          (let (name position)
-            (cond
-             ((and (listp symbol) (imenu--subalist-p symbol))
-              (live-ido-goto-symbol symbol))
-             ((listp symbol)
-              (setq name (car symbol))
-              (setq position (cdr symbol)))
-             ((stringp symbol)
-              (setq name symbol)
-              (setq position
-                    (get-text-property 1 'org-imenu-marker symbol))))
-            (unless (or (null position) (null name)
-                        (string= (car imenu--rescan-item) name))
-              (add-to-list 'live-symbol-names name)
-              (add-to-list 'live-name-and-pos (cons name position))))))))
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to \\[find-file] a recent file"
+  (interactive)
+  (if
+      (find-file (ido-completing-read "Find recent file: "
+                                      (mapcar (lambda (path)
+                                                (replace-regexp-in-string (expand-file-name (getenv "HOME")) "~" path))
+                                              recentf-list) nil t))
+      (message "Opening file...")
+    (message "Aborting")))
 
 (defvar ido-dont-ignore-buffer-names '())
 
@@ -77,4 +50,3 @@
    (string-match-p "^*" name)
    (not (member name ido-dont-ignore-buffer-names))))
 
-(setq ido-ignore-buffers (list "\\` "))

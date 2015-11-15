@@ -1,19 +1,43 @@
-;;make sure ansi colour character escapes are honoured
+(setq initial-major-mode 'lisp-interaction-mode
+      redisplay-dont-pause t
+      column-number-mode t
+      echo-keystrokes 0.02
+      inhibit-startup-message t
+      transient-mark-mode t
+      shift-select-mode nil
+      require-final-newline t
+      truncate-partial-width-windows nil
+      delete-by-moving-to-trash nil
+      confirm-nonexistent-file-or-buffer nil
+      query-replace-highlight t
+      next-error-highlight t
+      next-error-highlight-no-select t)
+
+;; set all coding systems to utf-8
+(set-language-environment 'utf-8)
+(set-default-coding-systems 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+(setq utf-translate-cjk-mode nil)
+
+;; make sure ansi colour character escapes are honoured
 (require 'ansi-color)
 (ansi-color-for-comint-mode-on)
 
 (setq font-lock-maximum-decoration t
       color-theme-is-global t)
 
-;; Line-wrapping
-(set-default 'fill-column 72)
-
-;get rid of clutter
+;; get rid of clutter
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-;remove bells
+;; remove bells
 (setq ring-bell-function 'ignore)
 
 ;; font setitng functions

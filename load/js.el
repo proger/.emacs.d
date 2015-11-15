@@ -1,3 +1,12 @@
+(use-package js-comint
+  :ensure t)
+
+(use-package js2-mode
+  :ensure t)
+
+(use-package nodejs-repl
+  :ensure t)
+
 ;;; nodejs-repl-eval.el --- Summary
 ;;; Commentary:
 ;;;
@@ -8,6 +17,10 @@
 
 (require 'js2-mode)
 (require 'nodejs-repl)
+
+(setq inferior-js-program-command "env NODE_NO_READLINE=1 node --interactive")
+(add-hook 'js2-mode-hook '(lambda ()
+                            (define-key js2-mode-map "\C-x\C-e" 'nodejs-repl-eval-dwim)))
 
 (defun nodejs-repl-eval-region (start end)
   "Evaluate the region specified by `START' and `END'."
