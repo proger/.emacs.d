@@ -1,8 +1,5 @@
 ;; highlight expression on eval
 
-(unless (package-installed-p 'highlight) (package-install 'highlight)) 
-(require 'highlight)
-
 (defun live-bounds-of-preceding-sexp ()
   "Return the bounds of sexp before the point. Copies semantics
    directly from the fn preceding-sexp to ensure highlighted area
@@ -69,9 +66,13 @@
   (define-eval-sexp-fu-flash-command eval-defun
     (eval-sexp-fu-flash (live-bounds-of-defun))))
 
-(use-package eval-sexp-fu
+(use-package highlight
+  :demand
   :ensure t
-  :config
-  (setq eval-sexp-fu-flash-duration 0.5)
-  (live-esf-initialize-elisp))
-
+  :init (progn
+          (use-package eval-sexp-fu
+            :ensure t
+            :demand
+            :config
+            (setq eval-sexp-fu-flash-duration 0.5)
+            (live-esf-initialize-elisp))))

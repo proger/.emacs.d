@@ -52,7 +52,6 @@
   (interactive)
   (just-one-space -1))
 
-
 (defun live-backwards-kill-line ()
   "Kill all characters on current line before point. Same as
   passing 0 as an argument to kill-line"
@@ -79,3 +78,20 @@
     (let* ((result (buffer-substring-no-properties begin (point))))
       (delete-region begin (point))
       result)))
+
+;;http://www.emacswiki.org/emacs/IncrementNumber
+(defun live-increment-number-at-point ()
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (or (looking-at "[0123456789]")
+          (error "No number at point"))
+      (replace-match (number-to-string (mod (1+ (string-to-number (match-string 0))) 10))))))
+
+(defun live-decrement-number-at-point ()
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (or (looking-at "[0123456789]")
+          (error "No number at point"))
+      (replace-match (number-to-string (mod (1- (string-to-number (match-string 0))) 10))))))

@@ -24,4 +24,3 @@ tramp
 tmp/*
 .smex-items
 swank/*
-elpa/
