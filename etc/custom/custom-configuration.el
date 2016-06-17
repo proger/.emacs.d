@@ -10,11 +10,15 @@
      (awk-mode . "awk")
      (other . "linux"))))
  '(change-major-mode-with-file-name t)
- '(comint-scroll-to-bottom-on-input t)
+ '(comint-input-autoexpand t)
+ '(comint-input-ignoredups t)
+ '(comint-prompt-read-only t)
+ '(comint-scroll-show-maximum-output nil)
+ '(comint-scroll-to-bottom-on-input nil)
  '(compilation-message-face (quote default))
  '(custom-safe-themes
    (quote
-    ("b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
+    ("71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
  '(default-input-method "ukrainian-computer")
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(emms-mode-line-icon-image-cache
@@ -40,7 +44,7 @@ static char *note[] = {
 \"#######..#\" };")))
  '(explicit-shell-file-name "/bin/bash")
  '(fci-rule-color "#444444")
- '(flycheck-clang-language-standard "c++14")
+ '(flycheck-clang-language-standard "c99")
  '(fstar-enabled-modules
    (quote
     (font-lock prettify indentation comments flycheck interactive)))
@@ -88,13 +92,13 @@ static char *gnus-pointer[] = {
  '(haskell-notify-p t)
  '(haskell-process-args-ghci
    (quote
-    ("NIX_PATH=/Users/vladki/src/eris/deps:ops=/Users/vladki/src/ops" "AWSFILE=/Users/vladki/priv/awspersonal.csv" "DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT" "with-aws" "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox")))
+    ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT" "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox")))
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-generate-tags nil)
  '(haskell-process-log t)
  '(haskell-process-path-ghci "env")
  '(haskell-process-reload-with-fbytecode nil)
- '(haskell-process-suggest-haskell-docs-imports t)
+ '(haskell-process-suggest-haskell-docs-imports nil)
  '(haskell-process-suggest-remove-import-lines nil)
  '(haskell-process-type (quote ghci))
  '(haskell-process-use-presentation-mode t)
@@ -117,6 +121,7 @@ static char *gnus-pointer[] = {
  '(hindent-style "gibiansky")
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
+ '(ibuffer-expert t)
  '(imagex-auto-adjust-mode t)
  '(imagex-global-sticky-mode t)
  '(line-spacing 0.02)
@@ -144,6 +149,12 @@ static char *gnus-pointer[] = {
       (quote forward-char)
       (quote backward-word)
       (quote forward-word)))))
+ '(safe-local-variable-values
+   (quote
+    ((TeX-command-extra-options . "-shell-escape")
+     (scheme-program-name . "scsh")
+     (eval progn
+           (pyvenv-workon "env")))))
  '(shm-auto-insert-bangs t)
  '(shm-auto-insert-skeletons t)
  '(shm-use-presentation-mode t)
@@ -174,7 +185,5 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background "#FFFFFE"))))
- '(helm-source-header ((t (:background "#2F69BF" :foreground "white" :weight bold :height 1 :family "Menlo"))))
- '(shm-current-face ((t (:background "#30344A"))))
+ '(shm-current-face ((t (:background "#efefef"))))
  '(shm-quarantine-face ((t (:inherit font-lock-error)))))

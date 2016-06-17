@@ -11,4 +11,6 @@
 
 (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
 (setq tramp-default-method "ssh")
+(setq tramp-use-ssh-controlmaster-options nil)
+
 ;(add-to-list 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))

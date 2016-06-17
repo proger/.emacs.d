@@ -1,8 +1,17 @@
+(defmacro comment (&rest body)
+  "Comment out one or more s-expressions."
+  nil)
+
+(defmacro uncomment (body) body)
+
 (require 'package)
 (package-initialize)
+
+(setq my-user-emacs-directory "~/.emacs.d/")
+
 ;; bootstrap: https://github.com/jwiegley/use-package
-(load-file (concat user-emacs-directory "bind-key.el"))
-(load-file (concat user-emacs-directory "use-package.el"))
+(load-file (concat my-user-emacs-directory "bind-key.el"))
+(load-file (concat my-user-emacs-directory "use-package.el"))
 
 (setq package-archives '(("tromey" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
@@ -21,12 +30,11 @@
                 "load/ido-conf.el"
                 "load/popwin-conf.el"
                 "load/tramp-conf.el"
-                "load/highlight-flash-conf.el"
+                ;;"load/highlight-flash-conf.el"
                 "load/lisp-conf.el"
-                "load/nix.el"
                 ;;"load/js.el"
 		))
-  (load-file (concat user-emacs-directory file)))
+  (load-file (concat my-user-emacs-directory file)))
 
 (use-package diminish
   :ensure t)
@@ -49,10 +57,8 @@
    '(haskell-process-suggest-haskell-docs-imports nil)
    '(haskell-process-args-ghci
      (quote
-      ("NIX_PATH=/Users/vladki/src/eris/deps:ops=/Users/vladki/src/ops"
-       "AWSFILE=/Users/vladki/priv/awspersonal.csv"
-       "DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
-       "with-aws" "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
+      ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
+       "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
 
   (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
@@ -88,7 +94,10 @@
 (use-package magit
   :ensure t
   :pin melpa-stable
-  :bind (("C-x g" . magit-status)))
+  :bind (("C-x g" . magit-status)
+         ("C-c g b" . magit-branch-and-checkout)
+         ("C-c g c" . magit-checkout)
+         ("C-c g l" . magit-log-all)))
 
 (use-package expand-region
   :ensure t
@@ -104,7 +113,9 @@
 (use-package flycheck
  :ensure t
  :config
- (setq-default flycheck-disabled-checkers '(emacs-lisp emacs-lisp-checkdoc)))
+ (add-to-list 'flycheck-disabled-checkers 'emacs-lisp)
+ (add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
+ (global-flycheck-mode))
 
 (use-package paredit
   :ensure t)
@@ -131,11 +142,10 @@
   :ensure t
   :pin elpy
   :config
-  ;;(setq venv-location '("/Users/vladki/tensorflow"))
   (elpy-enable)
-
-  ;;(when (executable-find "ipython3")
-  ;;  (setq python-shell-interpreter "ipython3"))
+  (elpy-use-ipython)
+  (define-key python-mode-map (kbd "C-c C-l") 'elpy-shell-send-region-or-buffer)
+  (define-key python-mode-map (kbd "C-c C-;") 'elpy-shell-send-current-statement)
   )
 
 (use-package ein
@@ -148,6 +158,12 @@
 (use-package ess
   :ensure t
   :pin melpa-stable)
+
+;; (use-package ess-view
+;;   :ensure t)
+
+;; (use-package ess-R-data-view
+;;   :ensure t)
 
 (use-package julia-mode
   :ensure t)
@@ -222,8 +238,11 @@ Non-interactive arguments are Begin End Regexp"
                               (setq indent-tabs-mode nil)
                               (v--infer-indentation-style)))))
 
-;;(use-package cmake-mode
-;;  :ensure t)
+
+
+(comment
+ (use-package cmake-font-lock
+   :ensure t))
 
 (use-package dash-at-point
   :ensure t
@@ -315,69 +334,61 @@ Non-interactive arguments are Begin End Regexp"
 
 ;; themes
 
-;; (use-package naquadah-theme
-;;   :ensure t
-;;   :config (load-theme 'naquadah))
+(defun cycle-my-theme ()
+  "Cycle through a list of themes, my-themes."
+  (interactive)
+  (when curr-theme
+    (disable-theme curr-theme)
+    (setq my-themes (append my-themes (list curr-theme))))
+  (setq curr-theme (pop my-themes))
+  (load-theme curr-theme t))
 
-;; (use-package hemisu-theme
-;;   :ensure t
-;;   :config (load-theme 'hemisu-light))
+(defvar curr-theme nil)
 
-;; (load-theme 'hemisu-dark)
+;;(defvar my-themes '(cyberpunk flatui leuven))
+;;(defvar my-themes '(cyberpunk flatui leuven))
 
-;; (use-package monokai-theme
-;;   :ensure t
-;;   :config (load-theme 'monokai))
+;; (use-package naquadah-theme :ensure t)
+;; (use-package hemisu-theme :ensure t)
+;; (use-package monokai-theme :ensure t)
+;; (use-package molokai-theme :ensure t)
+;; (use-package ir-black-theme :ensure t)
 
-;; (use-package molokai-theme
-;;   :ensure t
-;;   :config (load-theme 'molokai))
-
-;; (use-package ir-black-theme
-;;   :ensure t
-;;   :config (load-theme 'ir-black))
-
-;; (use-package flatui-theme
-;;   :ensure t
-;;   :config (load-theme 'flatui))
-
-(use-package leuven-theme
+(comment
+ (use-package flatui-theme :ensure
+   :config
+   (custom-set-faces
+      '(default ((t (:background "#eee"))))) ; mainly terminal background
+   ))
+(comment
+ (use-package cyberpunk-theme
   :ensure t
   :config
+  (load-theme 'cyberpunk)
   (custom-set-faces
-   '(default ((t (:background "#FFFFFE"))))) ; mainly terminal background
-  (load-theme 'leuven))
+   '(default ((t (:background "#000"))))) ; mainly terminal background
+  ))
 
-;; (use-package obsidian-theme
-;;   :ensure t
-;;   :config (load-theme 'obsidian))
+(uncomment
+ (use-package leuven-theme
+   :ensure t
+   :config
+   (custom-set-faces
+    '(default ((t (:background "#FFFFFE"))))) ; mainly terminal background
+   ))
 
-;; (use-package cyberpunk-theme
-;;   :ensure t
-;;   :config (load-theme 'cyberpunk))
+;;(cycle-my-theme)
 
-;; (use-package alect-themes
-;;   :ensure t
-;;   :config (load-theme 'alect-black))
-
+(uncomment
 ;; light:
-(custom-set-faces
+ (custom-set-faces
+  '(shm-quarantine-face ((t (:inherit font-lock-error))))
+  '(shm-current-face ((t (:background "#efefef"))))))
+
+(comment
+ (custom-set-faces
  '(shm-quarantine-face ((t (:inherit font-lock-error))))
- '(shm-current-face ((t (:background "#efefef")))))
-
-;; dark:
-;; (custom-set-faces
-;;  '(shm-quarantine-face ((t (:inherit font-lock-error))))
-;;  '(shm-current-face ((t (:background "#30344A")))))
-
-(defun disable-all-themes ()
-  "disable all active themes."
-  (dolist (i custom-enabled-themes)
-    (disable-theme i)))
-;; (disable-all-themes)
-
-(defadvice load-theme (before disable-themes-first activate)
-  (disable-all-themes))
+  '(shm-current-face ((t (:background "#30344A"))))))
 
 ;; (use-package smex
 ;;   :ensure t
@@ -400,11 +411,14 @@ Non-interactive arguments are Begin End Regexp"
                 (ibuffer-do-sort-by-recency))))
   (setq projectile-switch-project-action 'projectile-dired))
 
+(define-key comint-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
+
 (use-package helm
   :ensure t
   :diminish helm-mode
   :config (setq helm-buffers-fuzzy-matching t
-                helm-recentf-fuzzy-match    t)
+                helm-recentf-fuzzy-match    t
+                helm-split-window-default-side 'other)
 
   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
 
@@ -464,6 +478,7 @@ Non-interactive arguments are Begin End Regexp"
          ("C-x C-b" . helm-mini)
          ("C-x C-f" . helm-find-files)
          ("C-x j" . helm-imenu)
+         ("C-x p" . helm-etags-select)
          ("M-y" . helm-show-kill-ring)
          ("M-X" . helm-resume)
          ("M-o" . helm-mini)
@@ -476,6 +491,14 @@ Non-interactive arguments are Begin End Regexp"
   :bind (("C-c g g" . browse-at-remote)))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
+(load "~/.emacs.d/vendor/PG/generic/proof-site")
+
+(use-package company-coq
+  :ensure t
+  :config
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+  (add-to-list 'flycheck-disabled-checkers 'coq)
+  :bind (("C-c C-'" . proof-assert-until-point-interactive)))
 
 (use-package nix-mode
   ;:ensure t
@@ -517,9 +540,12 @@ Non-interactive arguments are Begin End Regexp"
 
   (define-key nix-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key nix-mode-map (kbd "M-p") 'flycheck-previous-error)
+  (define-key nix-mode-map (kbd "TAB") 'nix-indent-line)
 
   (add-to-list 'flycheck-checkers 'nix))
 
+;(define-key sh-mode-map (kbd "M-n") 'flycheck-next-error)
+;(define-key sh-mode-map (kbd "M-p") 'flycheck-previous-error)
 
 (defun shell-region (command)
   "execute region in an inferior shell"
@@ -533,11 +559,12 @@ Non-interactive arguments are Begin End Regexp"
     (make-frame)
     (delete-window current)))
 
-(defun my/projectile-pop-to-shell ()
+(defun my/projectile-pop-to-shell (arg)
   "pop to a shell identified with a current project"
-  (interactive)
+  (interactive "p")
 
-  (let ((name (format "%%%s%%" (projectile-project-name))))
+  (let ((name (let ((suffix (if (= 1 arg) "" (format "-%s" arg))))
+                (format "%%%s%s%%" (projectile-project-name) suffix))))
     (pop-to-buffer name t)
     (shell name)))
 
@@ -612,6 +639,8 @@ Non-interactive arguments are Begin End Regexp"
 ;; Show documentation/information with M-RET
 (define-key lisp-mode-shared-map (kbd "M-RET") 'live-lisp-describe-thing-at-point)
 
+
+
 (defun my/comint-clear-buffer ()
   (interactive)
   (let ((comint-buffer-maximum-size 0))
@@ -625,3 +654,60 @@ Non-interactive arguments are Begin End Regexp"
 
 (global-set-key (kbd "M-`")         'other-frame)
 (global-set-key (kbd "<C-tab>")     'ibuffer)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)))
+
+(defun my/org-confirm-babel-evaluate (lang body)
+  (not (string= lang "dot")))
+(setq org-confirm-babel-evaluate 'my/org-confirm-babel-evaluate)
+
+(define-key global-map (kbd "C-0") 'terminal-here)
+
+(defun terminal-here ()
+  (interactive)
+  (dired-smart-shell-command "open -a Terminal $PWD" nil nil))
+
+(use-package yaml-mode
+  :ensure t)
+
+;; (Uncomment
+;;  (use-package deferred
+;;    :ensure t
+;;    :config (require 'deferred))
+
+;; (uncomment
+;;  (use-package org-trello
+;;    :ensure t))
+
+;; (set-frame-parameter (selected-frame) 'alpha '(95 95))
+;; (set-frame-parameter (selected-frame) 'alpha '(100 100))
+
+(use-package cider
+  :pin melpa-stable
+  :ensure t)
+
+(use-package dumb-jump
+  :ensure t
+  :config
+  (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
+  (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
+  (add-to-list 'dumb-jump-find-rules
+               '(:type "function" :language "clojure" :regex "\\\(rum/defcs?\\s+JJJ\\j"))
+
+  (add-to-list 'dumb-jump-language-file-exts '(:language "haskell" :ext "hs"))
+  (add-to-list 'dumb-jump-find-rules
+               '(:type "function" :language "haskell" :regex "^\\s+JJJ\\j"))
+  (dumb-jump-mode))
+
+(use-package sml-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.\\(sml\\|sig\\)\\'" . sml-mode)))
+
+;; (use-package cider-eval-sexp-fu
+;;   :pin melpa-stable
+;;   :ensure t)
+
+;; (package-refresh-packages)

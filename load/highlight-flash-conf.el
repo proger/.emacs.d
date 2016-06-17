@@ -45,7 +45,7 @@
 	      (forward-char))
 	  (cons (point) opoint))))))
 
-(defun live-bounds-of-defun ()
+(live defun-bounds-of-defun ()
   "Return the bounds of the defun around point. Copies semantics
    directly from the fn eval-defun-2 to ensure highlighted area
    is identical to that which is evaluated."
@@ -66,13 +66,19 @@
   (define-eval-sexp-fu-flash-command eval-defun
     (eval-sexp-fu-flash (live-bounds-of-defun))))
 
-(use-package highlight
-  :demand
-  :ensure t
-  :init (progn
-          (use-package eval-sexp-fu
-            :ensure t
-            :demand
-            :config
-            (setq eval-sexp-fu-flash-duration 0.5)
-            (live-esf-initialize-elisp))))
+;; (use-package highlight-sexp
+;;  :demand
+;;  :ensure t
+;;  :init (progn
+;;          (use-package eval-sexp-fu
+;;            :ensure t
+;;            :demand
+;;            :config
+;;            (setq eval-sexp-fu-flash-duration 0.5)
+;;            (live-esf-initialize-elisp))))
+
+(comment
+(use-package highlight-sexp
+ :demand
+ :ensure t
+ :config (global-highlight-sexp-mode)))

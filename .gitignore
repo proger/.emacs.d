@@ -24,3 +24,11 @@ tramp
 tmp/*
 .smex-items
 swank/*
+.trello/
+request/
+ido.last
+eshell/
+var/
+smex-items
+projectile-bookmarks.eld
+.cask/
