@@ -113,8 +113,7 @@
 (use-package flycheck
  :ensure t
  :config
- (add-to-list 'flycheck-disabled-checkers 'emacs-lisp)
- (add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
+ (setq-default flycheck-disabled-checkers '(emacs-lisp emacs-lisp-checkdoc))
  (global-flycheck-mode))
 
 (use-package paredit
@@ -492,6 +491,8 @@ Non-interactive arguments are Begin End Regexp"
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (load "~/.emacs.d/vendor/PG/generic/proof-site")
+(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
+
 
 (use-package company-coq
   :ensure t
@@ -705,6 +706,62 @@ Non-interactive arguments are Begin End Regexp"
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.\\(sml\\|sig\\)\\'" . sml-mode)))
+
+(use-package raml-mode
+  ;:ensure t
+  :init)
+
+(comment
+ (set-fringe-mode
+  (/ (- (frame-pixel-width)
+        (* 100 (frame-char-width)))
+     2))
+ (set-fringe-mode nil)
+)
+
+(defun my/center (width)
+  (interactive "nBuffer width: ")
+  (let* ((adj          (- (window-text-width)
+                          width))
+         (total-margin (+ adj
+                          left-margin-width
+                          right-margin-width)))
+    (setq left-margin-width  (/ total-margin 2))
+    (setq right-margin-width (- total-margin left-margin-width)))
+  (set-window-buffer (selected-window) (current-buffer)))
+
+(use-package dockerfile-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  (add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-mode)))
+
+(use-package unipoint
+  :ensure t
+  :bind
+  (("C-'" . unipoint-insert)))
+
+(use-package char-menu
+  :ensure t
+  :bind (("C-c C-'" . char-menu))
+  :config
+  (setq char-menu
+        '(;; "≈"
+          "Σ" "Π" "Λ"
+          "≡"
+          ;; "≠" "∞" "×" "±" "√"
+          ;; "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓"
+          "α" "β"
+          ;; "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ"
+          "λ" "μ"
+          ;; "ν" "ξ" "ο" "π" "ρ"
+          ;; "σ"
+          "τ"
+          ;; "υ" "φ" "χ"
+          "ψ" "ω")))
+
+
+;; (my/center 120)
 
 ;; (use-package cider-eval-sexp-fu
 ;;   :pin melpa-stable
