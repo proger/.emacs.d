@@ -32,3 +32,6 @@ var/
 smex-items
 projectile-bookmarks.eld
 .cask/
+vendor/PG/
+elpa/
+projectile.cache

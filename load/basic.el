@@ -20,10 +20,10 @@
   (setq system-name (car (split-string system-name "\\.")))
 
   ; big window by default
-  (add-to-list 'default-frame-alist '(left . 60))
-  (add-to-list 'default-frame-alist '(top . 20))
+  (add-to-list 'default-frame-alist '(left . 10))
+  (add-to-list 'default-frame-alist '(top . 10))
   (add-to-list 'default-frame-alist '(height . 60))
-  (add-to-list 'default-frame-alist '(width . 150))
+  (add-to-list 'default-frame-alist '(width . 200))
 
   (setq ls-lisp-use-insert-directory-program t)
   (setq insert-directory-program "gls")

@@ -45,26 +45,44 @@
   ;; (nyan-stop-music)
   )
 
+(use-package prolog
+  :config
+  (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+  (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+  (setq prolog-system 'swi))
+
 (use-package haskell-mode
   :ensure t
   :mode "\\.hs\\'"
   :commands haskell-mode
   :config
 
-  (custom-set-variables
-   '(haskell-process-path-ghci "env")
-   '(haskell-process-type (quote ghci))
-   '(haskell-process-suggest-haskell-docs-imports nil)
-   '(haskell-process-args-ghci
-     (quote
-      ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
-       "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
+  ;; (custom-set-variables
+  ;;  '(haskell-process-path-ghci "env")
+  ;;  '(haskell-process-type (quote ghci))
+  ;;  '(haskell-process-suggest-haskell-docs-imports nil)
+  ;;  '(haskell-process-args-ghci
+  ;;    (quote
+  ;;     ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
+  ;;      "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
 
-  (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+  ;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
   ;(add-hook 'haskell-mode-hook 'flycheck-mode)
   )
+
+
+(use-package intero
+  ;;:ensure t
+  :config
+  (load "~/.emacs.d/vendor/intero/elisp/haskell-simple-indent")
+  (load "~/.emacs.d/vendor/intero/elisp/intero")
+  (add-hook 'haskell-mode-hook 'intero-mode)
+  (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error)
+  :bind (("M-," . pop-global-mark)))
+
 
 (use-package input
   :bind (("C-\\" . toggle-input-method)))
@@ -129,9 +147,16 @@
   :ensure t)
 
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . gfm-mode))
+  :init
+  ;; (markdown-reload-extensions)
+  (setq markdown-command "multimarkdown")
+  (setq markdown-enable-math t))
 
-(use-package markdown-toc
+(use-package writeroom-mode
   :ensure t)
 
 (use-package erlang
@@ -376,6 +401,10 @@ Non-interactive arguments are Begin End Regexp"
     '(default ((t (:background "#FFFFFE"))))) ; mainly terminal background
    ))
 
+(uncomment
+ (use-package spacemacs-theme
+   :ensure t))
+
 ;;(cycle-my-theme)
 
 (uncomment
@@ -492,7 +521,20 @@ Non-interactive arguments are Begin End Regexp"
 (add-to-list 'load-path "~/.emacs.d/vendor")
 (load "~/.emacs.d/vendor/PG/generic/proof-site")
 (load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
+(setq twelf-root "/Users/vladki/src/oplss/twelf/")
+(load (concat twelf-root "emacs/twelf-init.el"))
 
+(use-package company :ensure t)
+(use-package dash :ensure t)
+(use-package dash-functional :ensure t)
+(use-package fill-column-indicator :ensure t)
+(use-package f :ensure t)
+(use-package s :ensure t)
+
+(setq lean-rootdir "/usr/local")
+(setq-local lean-emacs-path "/usr/local/share/emacs/site-lisp/lean")
+(add-to-list 'load-path (expand-file-name lean-emacs-path))
+(require 'lean-mode)
 
 (use-package company-coq
   :ensure t
@@ -739,27 +781,33 @@ Non-interactive arguments are Begin End Regexp"
 (use-package unipoint
   :ensure t
   :bind
-  (("C-'" . unipoint-insert)))
+  (("C-'" . unipoint-insert)
+   ("C-c '" . unipoint-insert)))
 
 (use-package char-menu
   :ensure t
   :bind (("C-c C-'" . char-menu))
   :config
   (setq char-menu
-        '(;; "≈"
+        '("≈"
           "Σ" "Π" "Λ"
+          "⊢" "⊨"
           "≡"
           ;; "≠" "∞" "×" "±" "√"
           ;; "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓"
           "α" "β"
-          ;; "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ"
+          ;; "Y" "δ"
+          "ε" ;; "ζ"
+          "η" ;;"θ" "ι" "κ"
           "λ" "μ"
           ;; "ν" "ξ" "ο" "π" "ρ"
-          ;; "σ"
-          "τ"
-          ;; "υ" "φ" "χ"
+          "σ" "τ" "υ" "φ" "χ"
           "ψ" "ω")))
 
+(use-package ws-butler
+  :ensure t
+  :config
+  (add-hook 'fundamental-mode-hook 'ws-butler-mode))
 
 ;; (my/center 120)
 
