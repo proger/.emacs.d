@@ -514,6 +514,8 @@ Non-interactive arguments are Begin End Regexp"
          ;;("C-h SPC" . helm-all-mark-rings)
          ))
 
+(global-set-key (kbd "<C-tab>")     'helm-mini)
+
 (use-package browse-at-remote
   :ensure t
   :bind (("C-c g g" . browse-at-remote)))
@@ -679,6 +681,8 @@ Non-interactive arguments are Begin End Regexp"
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
 ;; Show documentation/information with M-RET
 (define-key lisp-mode-shared-map (kbd "M-RET") 'live-lisp-describe-thing-at-point)
 
@@ -696,7 +700,6 @@ Non-interactive arguments are Begin End Regexp"
 (global-set-key (kbd "C--")         'comment-or-uncomment-region)
 
 (global-set-key (kbd "M-`")         'other-frame)
-(global-set-key (kbd "<C-tab>")     'ibuffer)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -730,6 +733,10 @@ Non-interactive arguments are Begin End Regexp"
 (use-package cider
   :pin melpa-stable
   :ensure t)
+
+(use-package helm-cider
+  :ensure t
+  :config (helm-cider-mode 1))
 
 (use-package dumb-jump
   :ensure t
@@ -816,3 +823,48 @@ Non-interactive arguments are Begin End Regexp"
 ;;   :ensure t)
 
 ;; (package-refresh-packages)
+
+
+(defun gorilla-empty-all-results* ()
+  (while (re-search-forward
+          ";; @@\n\\(;; ->\n\\)?\\(;;;.*\n\\)*\\(;; <-\n\\)?;; =>\n\\(;;;.*\n\\)+;; <="
+          nil t)
+    (replace-match ";; @@")))
+
+(defun gorilla-empty-all-results ()
+  "Empty all Gorilla REPL result blocks"
+  (interactive)
+  (save-excursion
+    (goto-char 0)
+    (gorilla-empty-all-results*)))
+
+;; http://blog.brunobonacci.com/2016/03/18/emacs-incanter-hack/
+(setq filechart-temp-file "/tmp/chart.png")
+(setq filechart-wait-time 500)
+
+(defun filechart-display-image-inline (buffer-name file-name)
+  "Use `BUFFER-NAME' to display the image in `FILE-NAME'.
+  Checks weather `BUFFER-NAME' already exists, and if not create
+  as needed."
+  (switch-to-buffer-other-window buffer-name)
+  (iimage-mode t)
+  (read-only-mode -1)
+  (kill-region (point-min) (point-max))
+  ;; unless we clear the cache, the same cached image will
+  ;; always get re-displayed.
+  (clear-image-cache nil)
+  (insert-image (create-image file-name))
+  (read-only-mode t))
+
+(defun filechart-eval-and-display ()
+  "Evaluate the expression preceding point
+   and display the chart into a popup buffer"
+  (interactive)
+  (let ((old-buf (current-buffer)))
+    (condition-case nil
+                    (delete-file filechart-temp-file)
+                    (error nil))
+    (cider-eval-last-sexp)
+    (sleep-for 0 filechart-wait-time)
+    (filechart-display-image-inline "*filechart-chart*" filechart-temp-chart-file)
+    (switch-to-buffer-other-window old-buf)))
