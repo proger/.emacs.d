@@ -638,6 +638,7 @@ Non-interactive arguments are Begin End Regexp"
 
 (global-set-key (kbd "C-M-<return>") 'my/projectile-pop-to-shell)
 (global-set-key (kbd "C-x 5 5") 'my/fork-window-to-frame)
+(global-set-key (kbd "C-x 5 6") 'my-toggle-window-split)
 
 (unless window-system
   (require 'mouse)
