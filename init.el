@@ -36,8 +36,19 @@
 		))
   (load-file (concat my-user-emacs-directory file)))
 
+
 (use-package diminish
   :ensure t)
+
+(use-package company
+  :ensure t
+  :config (global-company-mode))
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
 
 (use-package nyan-mode
   :ensure t
@@ -71,6 +82,29 @@
   (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
   ;(add-hook 'haskell-mode-hook 'flycheck-mode)
   )
+
+(use-package skewer-mode
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode))
+
+(use-package js2-mode
+  :ensure t
+  :mode (("\\.js$" . js2-mode)
+         ("\\.wppl$" . js2-mode))
+  :config
+  (setq js2-basic-offset 2)
+
+  (define-key js2-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key js2-mode-map (kbd "M-p") 'flycheck-previous-error))
+
+(use-package js2-refactor
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  (js2r-add-keybindings-with-prefix "C-c C-m"))
 
 
 (use-package intero
@@ -475,6 +509,12 @@ Non-interactive arguments are Begin End Regexp"
                    ("C-c M-i" . helm-multi-swoop)
                    ("C-c M-I" . helm-multi-swoop-all)))
 
+          (use-package helm-c-yasnippet
+            :ensure t
+            :config
+            (setq helm-yas-space-match-any-greedy t)
+            (global-set-key (kbd "C-c y") 'helm-yas-complete))
+
           (use-package helm-projectile
             :ensure t
             :demand
@@ -519,24 +559,6 @@ Non-interactive arguments are Begin End Regexp"
 (use-package browse-at-remote
   :ensure t
   :bind (("C-c g g" . browse-at-remote)))
-
-(add-to-list 'load-path "~/.emacs.d/vendor")
-(load "~/.emacs.d/vendor/PG/generic/proof-site")
-(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
-(setq twelf-root "/Users/vladki/src/oplss/twelf/")
-(load (concat twelf-root "emacs/twelf-init.el"))
-
-(use-package company :ensure t)
-(use-package dash :ensure t)
-(use-package dash-functional :ensure t)
-(use-package fill-column-indicator :ensure t)
-(use-package f :ensure t)
-(use-package s :ensure t)
-
-(setq lean-rootdir "/usr/local")
-(setq-local lean-emacs-path "/usr/local/share/emacs/site-lisp/lean")
-(add-to-list 'load-path (expand-file-name lean-emacs-path))
-(require 'lean-mode)
 
 (use-package company-coq
   :ensure t
@@ -732,7 +754,9 @@ Non-interactive arguments are Begin End Regexp"
 
 (use-package cider
   :pin melpa-stable
-  :ensure t)
+  :ensure t
+  :config
+  (add-to-list 'clojure-mode-hook 'paredit-mode))
 
 (use-package helm-cider
   :ensure t
@@ -743,13 +767,15 @@ Non-interactive arguments are Begin End Regexp"
   :config
   (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
   (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
+  (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "clj"))
   (add-to-list 'dumb-jump-find-rules
-               '(:type "function" :language "clojure" :regex "\\\(rum/defcs?\\s+JJJ\\j"))
+               '(:type "function" :language "clojure" :regex "\\\(def?\\s+JJJ\\j"))
 
-  (add-to-list 'dumb-jump-language-file-exts '(:language "haskell" :ext "hs"))
-  (add-to-list 'dumb-jump-find-rules
-               '(:type "function" :language "haskell" :regex "^\\s+JJJ\\j"))
+  ;; (add-to-list 'dumb-jump-language-file-exts '(:language "haskell" :ext "hs"))
+  ;; (add-to-list 'dumb-jump-find-rules
+  ;;              '(:type "function" :language "haskell" :regex "^\\s+JJJ\\j"))
   (dumb-jump-mode))
+(dumb-jump-mode nil)
 
 (use-package sml-mode
   :ensure t
@@ -814,7 +840,7 @@ Non-interactive arguments are Begin End Regexp"
 (use-package ws-butler
   :ensure t
   :config
-  (add-hook 'fundamental-mode-hook 'ws-butler-mode))
+  (ws-butler-global-mode))
 
 ;; (my/center 120)
 
@@ -868,3 +894,189 @@ Non-interactive arguments are Begin End Regexp"
     (sleep-for 0 filechart-wait-time)
     (filechart-display-image-inline "*filechart-chart*" filechart-temp-chart-file)
     (switch-to-buffer-other-window old-buf)))
+
+(use-package smartscan
+  :ensure t
+  :config
+  ;; conflicts with flycheck M-n M-p
+  (add-to-list 'prog-mode-hook 'smartscan-mode))
+
+;;; local stuff
+
+(add-to-list 'load-path "~/.emacs.d/vendor")
+(load "~/.emacs.d/vendor/PG/generic/proof-site")
+(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
+(setq twelf-root "/Users/vladki/src/oplss/twelf/")
+(load (concat twelf-root "emacs/twelf-init.el"))
+(add-to-list 'load-path "~/.emacs.d/vendor/parinfer-mode")
+(require 'parinfer-mode)
+
+(use-package dash :ensure t)
+(use-package dash-functional :ensure t)
+(use-package fill-column-indicator :ensure t)
+(use-package f :ensure t)
+(use-package s :ensure t)
+
+(setq lean-rootdir "/usr/local")
+(setq-local lean-emacs-path "/usr/local/share/emacs/site-lisp/lean")
+(add-to-list 'load-path (expand-file-name lean-emacs-path))
+(require 'lean-mode)
+
+(comment
+(js2r-add-keybindings-with-prefix "C-c C-m")
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; fancy haskell modules https://github.com/chrisdone/chrisdone-emacs/blob/6b1ea1ff0a3931a0921861390565562bf1779548/config/haskell.el#L481
+;; uses completing-read
+
+(setq haskell-import-mapping
+      '(("Data.Text" . "import qualified Data.Text as T
+import Data.Text (Text)
+")
+        ("Data.Text.Lazy" . "import qualified Data.Text.Lazy as LT
+")
+        ("Data.ByteString" . "import qualified Data.ByteString as S
+import Data.ByteString (ByteString)
+")
+        ("Data.ByteString.Char8" . "import qualified Data.ByteString.Char8 as S8
+import Data.ByteString (ByteString)
+")
+        ("Data.ByteString.Lazy" . "import qualified Data.ByteString.Lazy as L
+")
+        ("Data.ByteString.Lazy.Char8" . "import qualified Data.ByteString.Lazy.Char8 as L8
+")
+        ("Data.Map" . "import qualified Data.Map.Strict as Map
+import Data.Map.Strict (Map)
+")
+        ("Data.Map.Strict" . "import qualified Data.Map.Strict as Map
+import Data.Map.Strict (Map)
+")
+        ("Data.Set" . "import qualified Data.Set as S
+import Data.Set (Set)
+")
+        ("Data.Vector" . "import qualified Data.Vector as V
+import Data.Vector (Vector)
+")
+        ("Data.Vector.Storable" . "import qualified Data.Vector.Storable as SV
+import Data.Vector (Vector)
+")
+        ("Data.Conduit.List" . "import qualified Data.Conduit.List as CL
+")
+        ("Data.Conduit.Binary" . "import qualified Data.Conduit.Binary as CB
+")))
+
+
+(defun haskell-capitalize-module (m)
+  ;; FIXME:
+  (with-temp-buffer
+    (insert m)
+    (upcase-initials-region (point-min) (point-max))
+    (buffer-string)))
+
+(defvar haskell-fast-module-list
+  (list)
+  "A list of modules.")
+
+(defun haskell-fast-modules-save ()
+  (interactive)
+  (with-current-buffer (find-file-noselect "~/.emacs.d/.haskell-modules.el")
+    (erase-buffer)
+    (insert (format "%S" haskell-fast-module-list))
+    (basic-save-buffer)
+    (bury-buffer)))
+
+(defun haskell-fast-modules-load ()
+  (interactive)
+  (with-current-buffer (find-file-noselect "~/.emacs.d/.haskell-modules.el")
+    (setq haskell-fast-module-list (read (buffer-string)))
+    (bury-buffer)))
+
+
+(defun haskell-fast-get-import (custom)
+  (if custom
+      (let* ((module (haskell-capitalize-module (read-from-minibuffer "Module: " ""))))
+        (unless (member module haskell-fast-module-list)
+          (add-to-list 'haskell-fast-module-list module))
+        module)
+    (let ((module (haskell-capitalize-module
+                   (completing-read
+                    "Module: "
+                    (append (mapcar #'car haskell-import-mapping)
+                            haskell-fast-module-list) nil nil))))
+      (unless (member module haskell-fast-module-list)
+        (add-to-list 'haskell-fast-module-list module)
+        (haskell-fast-modules-save))
+      module)))
+
+(defun haskell-fast-add-import (custom)
+  "Add an import to the import list.  Sorts and aligns imports,
+unless `haskell-stylish-on-save' is set, in which case we defer
+to stylish-haskell."
+  (interactive "P")
+  (save-excursion
+    (goto-char (point-max))
+    (haskell-navigate-imports)
+    (let* ((chosen (haskell-fast-get-import custom))
+           (module (let ((mapping (assoc chosen haskell-import-mapping)))
+                     (if mapping
+                         (cdr mapping)
+                       (concat "import " chosen "\n")))))
+      (insert module))
+    (haskell-sort-imports)
+    (haskell-align-imports)))
+
+(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
+
+
+;;;; useful buffers (taken from spacemacs)
+
+;; Regexp for useful and useless buffers for smarter buffer switching
+
+(defvar useless-buffers-regexp '("*\.\+")
+  "Regexp used to determine if a buffer is not useful.")
+
+(defvar useful-buffers-regexp '("\\*\\(scratch\\|terminal\.\+\\|ansi-term\\|eshell\\)\\*")
+  "Regexp used to define buffers that are useful despite matching `useless-buffers-regexp'.")
+
+
+
+(defun useless-buffer-p (buffer)
+  "Determines if a buffer is useful."
+  (let ((buf-paren-major-mode (get (with-current-buffer buffer
+                                     major-mode)
+                                   'derived-mode-parent))
+        (buf-name (buffer-name buffer)))
+    ;; first find if useful buffer exists, if so returns nil and don't check for
+    ;; useless buffers. If no useful buffer is found, check for useless buffers.
+    (unless (cl-loop for regexp in useful-buffers-regexp do
+                     (when (or (eq buf-paren-major-mode 'comint-mode)
+                               (string-match regexp buf-name))
+                       (return t)))
+      (cl-loop for regexp in useless-buffers-regexp do
+               (when (string-match regexp buf-name)
+                 (return t))))))
+
+
+(defun next-useful-buffer ()
+  "Switch to the next buffer and avoid special buffers."
+  (interactive)
+  (let ((start-buffer (current-buffer)))
+    (next-buffer)
+    (while (and (useless-buffer-p (current-buffer))
+                (not (eq (current-buffer) start-buffer)))
+      (next-buffer))))
+
+(defun previous-useful-buffer ()
+  "Switch to the previous buffer and avoid special buffers."
+  (interactive)
+  (let ((start-buffer (current-buffer)))
+    (previous-buffer)
+    (while (and (useless-buffer-p (current-buffer))
+                (not (eq (current-buffer) start-buffer)))
+      (previous-buffer))))
+
+
+(global-set-key  (kbd "C-x <left>") 'previous-useful-buffer)
+(global-set-key  (kbd "C-x <right>") 'next-useful-buffer)

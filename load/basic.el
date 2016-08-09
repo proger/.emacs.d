@@ -70,7 +70,7 @@
 ;; get rid of clutter
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(menu-bar-mode -1)
+(when (not window-system) (menu-bar-mode -1))
 
 ;; remove bells
 (setq ring-bell-function 'ignore)
