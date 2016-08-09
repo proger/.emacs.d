@@ -80,7 +80,8 @@
   ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
   ;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
-  ;(add-hook 'haskell-mode-hook 'flycheck-mode)
+  ;;(add-hook 'haskell-mode-hook 'flycheck-mode)
+  (define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
   )
 
 (use-package skewer-mode
@@ -904,12 +905,12 @@ Non-interactive arguments are Begin End Regexp"
 ;;; local stuff
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
-(load "~/.emacs.d/vendor/PG/generic/proof-site")
-(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
-(setq twelf-root "/Users/vladki/src/oplss/twelf/")
-(load (concat twelf-root "emacs/twelf-init.el"))
-(add-to-list 'load-path "~/.emacs.d/vendor/parinfer-mode")
-(require 'parinfer-mode)
+;;(load "~/.emacs.d/vendor/PG/generic/proof-site")
+;;(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
+;;(setq twelf-root "/Users/vladki/src/oplss/twelf/")
+;;(load (concat twelf-root "emacs/twelf-init.el"))
+;;(add-to-list 'load-path "~/.emacs.d/vendor/parinfer-mode")
+;;(require 'parinfer-mode)
 
 (use-package dash :ensure t)
 (use-package dash-functional :ensure t)
@@ -917,10 +918,10 @@ Non-interactive arguments are Begin End Regexp"
 (use-package f :ensure t)
 (use-package s :ensure t)
 
-(setq lean-rootdir "/usr/local")
-(setq-local lean-emacs-path "/usr/local/share/emacs/site-lisp/lean")
-(add-to-list 'load-path (expand-file-name lean-emacs-path))
-(require 'lean-mode)
+;;(setq lean-rootdir "/usr/local")
+;;(setq-local lean-emacs-path "/usr/local/share/emacs/site-lisp/lean")
+;;(add-to-list 'load-path (expand-file-name lean-emacs-path))
+;;(require 'lean-mode)
 
 (comment
 (js2r-add-keybindings-with-prefix "C-c C-m")
@@ -1026,8 +1027,6 @@ to stylish-haskell."
       (insert module))
     (haskell-sort-imports)
     (haskell-align-imports)))
-
-(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
 
 
 ;;;; useful buffers (taken from spacemacs)
