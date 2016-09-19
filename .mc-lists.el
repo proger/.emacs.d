@@ -16,6 +16,7 @@
         c-electric-semi&comma
         c-electric-star
         c-end-of-defun
+        c-indent-line-or-region
         cua-copy-region
         cua-cut-region
         cua-paste

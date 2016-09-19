@@ -48,7 +48,8 @@
   :ensure t
   :config
   (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode))
+  ;;(add-hook 'prog-mode-hook #'yas-minor-mode)
+  )
 
 (use-package nyan-mode
   :ensure t
@@ -61,28 +62,6 @@
   (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
   (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
   (setq prolog-system 'swi))
-
-(use-package haskell-mode
-  :ensure t
-  :mode "\\.hs\\'"
-  :commands haskell-mode
-  :config
-
-  ;; (custom-set-variables
-  ;;  '(haskell-process-path-ghci "env")
-  ;;  '(haskell-process-type (quote ghci))
-  ;;  '(haskell-process-suggest-haskell-docs-imports nil)
-  ;;  '(haskell-process-args-ghci
-  ;;    (quote
-  ;;     ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
-  ;;      "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
-
-  ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-  ;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
-  ;;(add-hook 'haskell-mode-hook 'flycheck-mode)
-  (define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
-  )
 
 (use-package skewer-mode
   :ensure t
@@ -106,17 +85,6 @@
   :config
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
   (js2r-add-keybindings-with-prefix "C-c C-m"))
-
-
-(use-package intero
-  ;;:ensure t
-  :config
-  (load "~/.emacs.d/vendor/intero/elisp/haskell-simple-indent")
-  (load "~/.emacs.d/vendor/intero/elisp/intero")
-  (add-hook 'haskell-mode-hook 'intero-mode)
-  (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
-  (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error)
-  :bind (("M-," . pop-global-mark)))
 
 
 (use-package input
@@ -265,6 +233,8 @@
   :bind (("C-c o" . ff-find-other-file)))
 
 (use-package c
+  :bind (("C-c C-k" . recompile)
+         ("C-c C-l" . kill-compilation))
   :config
   (setq c-default-style "linux"
         c-tab-always-indent t
@@ -436,13 +406,28 @@ Non-interactive arguments are Begin End Regexp"
     '(default ((t (:background "#FFFFFE"))))) ; mainly terminal background
    ))
 
-(uncomment
+(comment
  (use-package spacemacs-theme
    :ensure t))
 
 ;;(cycle-my-theme)
-
-(uncomment
+(comment
+ (use-package solarized-theme
+   :ensure t
+   :if window-system
+   :init
+   (setq solarized-use-variable-pitch nil
+         solarized-use-more-italic t
+         solarized-emphasize-indicators nil
+         solarized-distinct-fringe-background nil
+         solarized-high-contrast-mode-line t
+         solarized-scale-org-headlines nil
+         )
+   :config
+   (load "solarized-theme-autoloads" nil t)
+   (load-theme 'solarized-light t))
+ )
+(comment
 ;; light:
  (custom-set-faces
   '(shm-quarantine-face ((t (:inherit font-lock-error))))
@@ -692,10 +677,10 @@ Non-interactive arguments are Begin End Regexp"
 (global-set-key (kbd "C-M-[") 'scroll-other-window-down)
 
 ;;fast vertical naviation
-(global-set-key  (kbd "M-U") (lambda () (interactive) (forward-line -10)))
-(global-set-key  (kbd "M-D") (lambda () (interactive) (forward-line 10)))
-(global-set-key  (kbd "M-p") 'outline-previous-visible-heading)
-(global-set-key  (kbd "M-n") 'outline-next-visible-heading)
+;;(global-set-key  (kbd "M-U") (lambda () (interactive) (forward-line -10)))
+;;(global-set-key  (kbd "M-D") (lambda () (interactive) (forward-line 10)))
+;;(global-set-key  (kbd "M-p") 'outline-previous-visible-heading)
+;;(global-set-key  (kbd "M-n") 'outline-next-visible-heading)
 
 ;; Align your code in a pretty way.
 (global-set-key (kbd "C-x \\") 'align-regexp)
@@ -901,6 +886,7 @@ Non-interactive arguments are Begin End Regexp"
   :ensure t
   :config
   ;; conflicts with flycheck M-n M-p
+  ;; try smartscan-or-flycheck?
   (add-to-list 'prog-mode-hook 'smartscan-mode))
 
 ;;; local stuff
@@ -1029,6 +1015,36 @@ to stylish-haskell."
     (haskell-sort-imports)
     (haskell-align-imports)))
 
+(use-package haskell-mode
+  :ensure t
+  :mode "\\.hs\\'"
+  :commands haskell-mode
+  :config
+
+  ;; (custom-set-variables
+  ;;  '(haskell-process-path-ghci "env")
+  ;;  '(haskell-process-type (quote ghci))
+  ;;  '(haskell-process-suggest-haskell-docs-imports nil)
+  ;;  '(haskell-process-args-ghci
+  ;;    (quote
+  ;;     ("DYLD_INSERT_LIBRARIES=/System/Library/Frameworks/GLUT.framework/GLUT"
+  ;;      "stack" "ghci" "--ghci-options" "-fno-ghci-sandbox"))))
+
+  ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+  ;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
+  ;(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
+  (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error))
+
+(use-package intero
+  ;;:ensure t
+  :config
+  (load "~/.emacs.d/vendor/intero/elisp/haskell-simple-indent")
+  (load "~/.emacs.d/vendor/intero/elisp/intero")
+  (add-hook 'haskell-mode-hook 'intero-mode)
+  :bind (("M-," . pop-global-mark)))
+
 
 ;;;; useful buffers (taken from spacemacs)
 
@@ -1080,3 +1096,4 @@ to stylish-haskell."
 
 (global-set-key  (kbd "C-x <left>") 'previous-useful-buffer)
 (global-set-key  (kbd "C-x <right>") 'next-useful-buffer)
+

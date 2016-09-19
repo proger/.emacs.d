@@ -22,7 +22,7 @@
   ; big window by default
   (add-to-list 'default-frame-alist '(left . 10))
   (add-to-list 'default-frame-alist '(top . 10))
-  (add-to-list 'default-frame-alist '(height . 60))
+  (add-to-list 'default-frame-alist '(height . 58))
   (add-to-list 'default-frame-alist '(width . 200))
 
   (setq ls-lisp-use-insert-directory-program t)
@@ -98,7 +98,8 @@
    ((eq system-type 'darwin)
     (live-set-default-font font-string))))
 
-(live-set-default-darwin-font "Source Code Pro-12")
+;;(live-set-default-darwin-font "Source Code Pro-12")
+(live-set-default-darwin-font "SF Mono-12")
 
 ;; make fringe smaller
 (if (fboundp 'fringe-mode)

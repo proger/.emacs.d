@@ -16,9 +16,14 @@
  '(comint-scroll-show-maximum-output nil)
  '(comint-scroll-to-bottom-on-input nil)
  '(compilation-message-face (quote default))
+ '(compilation-scroll-output t)
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#657b83")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
  '(default-input-method "ukrainian-computer")
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(emms-mode-line-icon-image-cache
@@ -44,7 +49,7 @@ static char *note[] = {
 \"#######..#\" };")))
  '(explicit-shell-file-name "/bin/bash")
  '(fci-rule-color "#444444")
- '(flycheck-clang-language-standard "c99")
+ '(flycheck-clang-language-standard nil)
  '(fstar-enabled-modules
    (quote
     (font-lock prettify indentation comments flycheck interactive)))
@@ -107,7 +112,14 @@ static char *gnus-pointer[] = {
  '(helm-descbinds-mode t)
  '(helm-locate-command "locate %s %s")
  '(helm-mode t)
+ '(helm-swoop-use-line-number-face t)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#fdf6e3" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#586e75")
  '(highlight-tail-colors
    (quote
     (("#49483E" . 0)
@@ -119,6 +131,12 @@ static char *gnus-pointer[] = {
      ("#A41F99" . 85)
      ("#49483E" . 100))))
  '(hindent-style "gibiansky")
+ '(hl-bg-colors
+   (quote
+    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
+ '(hl-fg-colors
+   (quote
+    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(ibuffer-expert t)
@@ -137,6 +155,11 @@ static char *gnus-pointer[] = {
  '(magit-revert-buffers (quote silent) t)
  '(magit-save-repository-buffers nil)
  '(multishell-command-key [C-M-return])
+ '(nrepl-message-colors
+   (quote
+    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(pos-tip-background-color "#eee8d5")
+ '(pos-tip-foreground-color "#586e75")
  '(preview-auto-reveal
    (quote
     (eval
@@ -159,10 +182,14 @@ static char *gnus-pointer[] = {
  '(shm-auto-insert-bangs t)
  '(shm-auto-insert-skeletons t)
  '(shm-use-presentation-mode t)
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#657b83" 0.2))
  '(sml/active-background-color "#34495e")
  '(sml/active-foreground-color "#ecf0f1")
  '(sml/inactive-background-color "#dfe4ea")
  '(sml/inactive-foreground-color "#34495e")
+ '(solarized-high-contrast-mode-line t)
+ '(term-default-bg-color "#fdf6e3")
+ '(term-default-fg-color "#657b83")
  '(vc-annotate-background "#ecf0f1")
  '(vc-annotate-color-map
    (quote
@@ -180,11 +207,14 @@ static char *gnus-pointer[] = {
      (360 . "#0a74b9"))))
  '(vc-annotate-very-old-color "#0a74b9")
  '(weechat-color-list
-   (unspecified "#272822" "#49483E" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+   (unspecified "#272822" "#49483E" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0"))
+ '(xterm-color-names
+   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
+ '(xterm-color-names-bright
+   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(shm-current-face ((t (:background "#efefef"))))
- '(shm-quarantine-face ((t (:inherit font-lock-error)))))
+ )
