@@ -21,6 +21,7 @@
         cua-cut-region
         cua-paste
         cua-scroll-up
+        dumb-jump-go
         electric-newline-and-maybe-indent
         end-of-buffer
         flycheck-next-error
@@ -29,6 +30,7 @@
         helm-M-x
         helm-show-kill-ring
         indent-for-tab-command
+        intero-repl-load
         kill-region
         live-delete-whitespace-except-one
         mark-defun

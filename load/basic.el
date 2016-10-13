@@ -87,7 +87,7 @@
                      (eq 'font (car x)))
                    default-frame-alist))
   (cond
-   ((member (window-system) '(x w32 ns))
+   ((member (window-system) '(x w32 ns mac))
     (add-to-list 'default-frame-alist (cons 'font font-string))
     (set-default-font font-string t t))))
 
@@ -99,7 +99,11 @@
     (live-set-default-font font-string))))
 
 ;;(live-set-default-darwin-font "Source Code Pro-12")
-(live-set-default-darwin-font "SF Mono-12")
+
+(when (eq (window-system) 'mac)
+  (live-set-default-darwin-font "Fira Code-12")
+  (mac-auto-operator-composition-mode))
+
 
 ;; make fringe smaller
 (if (fboundp 'fringe-mode)

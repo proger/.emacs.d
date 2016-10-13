@@ -170,6 +170,7 @@
   :pin elpy
   :config
   (elpy-enable)
+  (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
   (elpy-use-ipython)
   (define-key python-mode-map (kbd "C-c C-l") 'elpy-shell-send-region-or-buffer)
   (define-key python-mode-map (kbd "C-c C-;") 'elpy-shell-send-current-statement)
@@ -205,7 +206,10 @@
   (setq TeX-command-force "LatexMk")
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
-        '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -r -b -g %n %o %b"))))
+        '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -r -b -g %n %o %b")))
+  (add-hook 'LaTeX-mode-hook
+          (lambda ()
+             (add-hook 'after-save-hook (lambda () (TeX-command-run-all 'nil)) 'append 'local))))
 
 (use-package auctex-latexmk
   :ensure t
@@ -262,6 +266,7 @@ Non-interactive arguments are Begin End Regexp"
           (tab-count (how-many-region (point-min) (point-max) "^\t")))
       (if (> space-count tab-count) (setq indent-tabs-mode nil))
       (if (> tab-count space-count) (setq indent-tabs-mode t))))
+  (define-key c-mode-base-map (kbd "RET") 'electric-newline-and-maybe-indent)
   (add-hook 'c-mode-hook '(lambda ()
                             (progn
                               (setq indent-tabs-mode nil)
@@ -301,9 +306,6 @@ Non-interactive arguments are Begin End Regexp"
   :ensure t
   :config
   (add-to-list 'flycheck-checkers 'swift))
-
-(use-package php-mode
-  :ensure t)
 
 (use-package win-switch
   :ensure t
@@ -468,6 +470,36 @@ Non-interactive arguments are Begin End Regexp"
                 helm-recentf-fuzzy-match    t
                 helm-split-window-default-side 'other)
 
+  (setf helm-boring-buffer-regexp-list '("\\` " "\\*helm" "\\*helm-mode"
+                                       "\\*Echo Area" "\\*Minibuf" "\\*monky-cmd-process\\*"
+                                       "\\*epc con" "\\*Compile-Log\\*" "\\*monky-process\\*"
+                                       "\\*CEDET CScope\\*" "\\*Messages\\*" "\\*Flycheck error"
+                                       "\\*.+(.+)" "elpa/.+" "tramp/.+"
+                                       "\\*Gofmt Errors\\*" "\\*autopep8"
+                                       "\\*magit-process:" "\\*magit-diff:" "\\*anaconda-mode\\*"
+                                       "\\*ESS"
+                                       "....Output" ;; TeX Output? wtf
+                                       "\\*Preview-Ghostscript"
+                                       "*_region_.tex"
+                                       ".+el.gz"))
+
+  (defun my-filter-dired-buffers (buffer-list)
+    (delq nil (mapcar
+               (lambda (buffer)
+                 (if (memq (with-current-buffer buffer major-mode)  (list 'debugger-mode 'special-mode 'help-mode))
+                     nil
+                   buffer))
+               buffer-list)))
+
+  (advice-add 'helm-skip-boring-buffers :filter-return 'my-filter-dired-buffers)
+
+  (global-set-key (kbd "C-x k") 'my-kill-this-buffer)
+
+  (defun my-kill-this-buffer ()
+    (interactive)
+    (kill-this-buffer)
+    (switch-to-buffer (car (helm-skip-boring-buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)) 'nil)))))
+
   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
 
   :init (progn
@@ -535,7 +567,7 @@ Non-interactive arguments are Begin End Regexp"
          ("C-x p" . helm-etags-select)
          ("M-y" . helm-show-kill-ring)
          ("M-X" . helm-resume)
-         ("M-o" . helm-mini)
+         ("M-l" . helm-mini)
          ;;("M-O" . helm-resume)
          ;;("C-h SPC" . helm-all-mark-rings)
          ))
@@ -689,8 +721,6 @@ Non-interactive arguments are Begin End Regexp"
 (global-set-key (kbd "C-r")   'isearch-backward)
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
-
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;; Show documentation/information with M-RET
 (define-key lisp-mode-shared-map (kbd "M-RET") 'live-lisp-describe-thing-at-point)
@@ -1019,8 +1049,11 @@ to stylish-haskell."
   :ensure t
   :mode "\\.hs\\'"
   :commands haskell-mode
+  :bind (("M-," . pop-global-mark))
   :config
-
+  (add-to-list 'load-path "~/.emacs.d/vendor/intero/elisp")
+  (require 'intero)
+  (add-hook 'haskell-mode-hook 'intero-mode)
   ;; (custom-set-variables
   ;;  '(haskell-process-path-ghci "env")
   ;;  '(haskell-process-type (quote ghci))
@@ -1036,14 +1069,6 @@ to stylish-haskell."
   ;(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
   (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error))
-
-(use-package intero
-  ;;:ensure t
-  :config
-  (load "~/.emacs.d/vendor/intero/elisp/haskell-simple-indent")
-  (load "~/.emacs.d/vendor/intero/elisp/intero")
-  (add-hook 'haskell-mode-hook 'intero-mode)
-  :bind (("M-," . pop-global-mark)))
 
 
 ;;;; useful buffers (taken from spacemacs)

@@ -158,6 +158,9 @@ static char *gnus-pointer[] = {
  '(nrepl-message-colors
    (quote
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(package-selected-packages
+   (quote
+    (elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc magit leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero image+ idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-c-yasnippet helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dumb-jump dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(preview-auto-reveal
@@ -175,7 +178,8 @@ static char *gnus-pointer[] = {
  '(prolog-system (quote swi))
  '(safe-local-variable-values
    (quote
-    ((TeX-command-extra-options . "-shell-escape")
+    ((encoding . utf-8)
+     (TeX-command-extra-options . "-shell-escape")
      (scheme-program-name . "scsh")
      (eval progn
            (pyvenv-workon "env")))))
