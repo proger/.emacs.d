@@ -209,7 +209,7 @@
         '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -r -b -g %n %o %b")))
   (add-hook 'LaTeX-mode-hook
           (lambda ()
-             (add-hook 'after-save-hook (lambda () (TeX-command-run-all 'nil)) 'append 'local))))
+             (add-hook 'after-save-hook (lambda () (TeX-command-sequence t t)) 'append 'local))))
 
 (use-package auctex-latexmk
   :ensure t
@@ -498,7 +498,7 @@ Non-interactive arguments are Begin End Regexp"
   (defun my-kill-this-buffer ()
     (interactive)
     (kill-this-buffer)
-    (switch-to-buffer (car (helm-skip-boring-buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)) 'nil)))))
+    (switch-to-buffer (car (helm-skip-boring-buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)) 'nil))))
 
   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
 
