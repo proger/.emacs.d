@@ -504,10 +504,13 @@ Non-interactive arguments are Begin End Regexp"
                                        "*_region_.tex"
                                        ".+el.gz"))
 
+  (setf helm-white-buffer-regexp-list '("\\*helm ag results\\*"))
+
   (defun my-filter-dired-buffers (buffer-list)
     (delq nil (mapcar
                (lambda (buffer)
-                 (if (memq (with-current-buffer buffer major-mode)  (list 'debugger-mode 'special-mode 'help-mode))
+                 (if (memq (with-current-buffer buffer major-mode)
+                           (list 'debugger-mode 'special-mode 'help-mode))
                      nil
                    buffer))
                buffer-list)))
@@ -518,8 +521,17 @@ Non-interactive arguments are Begin End Regexp"
 
   (defun my-kill-this-buffer ()
     (interactive)
-    (kill-this-buffer)
-    (switch-to-buffer (car (helm-skip-boring-buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)) 'nil))))
+    (let*
+        ((buffers (mapcar (lambda (x) (format "%s" x)) (projectile-project-buffers)))
+         ;;(funcall (helm-attr 'buffer-list helm-source-buffers-list))
+         (candidates (cdr (helm-skip-boring-buffers buffers 'nil)))
+         (root (projectile-project-root))
+         (next (car candidates)))
+      (message "%s" candidates)
+      (kill-this-buffer)
+      (if next
+          (switch-to-buffer next)
+        (dired root))))
 
   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
 
