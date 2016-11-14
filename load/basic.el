@@ -25,6 +25,10 @@
   (add-to-list 'default-frame-alist '(height . 58))
   (add-to-list 'default-frame-alist '(width . 200))
 
+  (defun half ()
+    (interactive)
+    (set-frame-parameter (selected-frame) 'width 110))
+
   (setq ls-lisp-use-insert-directory-program t)
   (setq insert-directory-program "gls")
 
@@ -101,8 +105,10 @@
 ;;(live-set-default-darwin-font "Source Code Pro-12")
 
 (when (eq (window-system) 'mac)
-  (live-set-default-darwin-font "Fira Code-12")
-  (mac-auto-operator-composition-mode))
+  ;;(live-set-default-darwin-font "Fira Code-12")
+  (live-set-default-darwin-font "SF Mono-12")
+  ;;(mac-auto-operator-composition-mode)
+  )
 
 
 ;; make fringe smaller

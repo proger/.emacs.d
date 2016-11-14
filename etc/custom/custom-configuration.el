@@ -3,6 +3,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(TeX-source-correlate-method (quote synctex))
+ '(TeX-source-correlate-mode t)
+ '(TeX-source-correlate-start-server t)
  '(c-default-style
    (quote
     ((c++-mode . "llvm.org")
@@ -160,7 +163,7 @@ static char *gnus-pointer[] = {
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc magit leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero image+ idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-c-yasnippet helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dumb-jump dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
+    (haskell-mode dumb-jump magit indy flycheck elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero image+ idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-c-yasnippet helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(preview-auto-reveal
@@ -178,7 +181,13 @@ static char *gnus-pointer[] = {
  '(prolog-system (quote swi))
  '(safe-local-variable-values
    (quote
-    ((encoding . utf-8)
+    ((eval setq-local flycheck-erlang-library-path
+           (list "/usr/local/Cellar/ejabberd/16.09/lib/cache_tab-1.0.4/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/ejabberd-16.09/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/esip-1.0.8/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/ezlib-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_tls-1.0.7/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_xml-1.1.15/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_yaml-1.0.6/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/goldrush-0.1.8/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/iconv-1.0.2/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/jiffy-0.14.7/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/lager-3.2.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/luerl-1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_mysql-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_oauth2-0.6.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_pam-1.0.0/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_pgsql-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_utils-1.0.5/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/stringprep-1.0.6/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/stun-1.0.7/ebin"))
+     (eval setq-local flycheck-erlang-include-path
+           (list "../../../../src/ejabberd/include/"))
+     (flycheck-erlang-library-path list "/usr/local/Cellar/ejabberd/16.09/lib/cache_tab-1.0.4/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/ejabberd-16.09/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/esip-1.0.8/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/ezlib-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_tls-1.0.7/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_xml-1.1.15/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/fast_yaml-1.0.6/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/goldrush-0.1.8/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/iconv-1.0.2/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/jiffy-0.14.7/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/lager-3.2.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/luerl-1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_mysql-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_oauth2-0.6.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_pam-1.0.0/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_pgsql-1.0.1/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/p1_utils-1.0.5/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/stringprep-1.0.6/ebin" "/usr/local/Cellar/ejabberd/16.09/lib/stun-1.0.7/ebin")
+     (flycheck-erlang-include-path list "../../../../src/ejabberd/include/")
+     (encoding . utf-8)
      (TeX-command-extra-options . "-shell-escape")
      (scheme-program-name . "scsh")
      (eval progn

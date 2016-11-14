@@ -36,10 +36,12 @@
         mark-defun
         markdown-exdent-or-delete
         org-delete-char
+        sgml-slash
         suspend-frame
         toggle-input-method
         wdired-next-line
         wdired-previous-line
+        yaml-electric-backspace
         ))
 
 (setq mc/cmds-to-run-once

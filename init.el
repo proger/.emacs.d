@@ -38,6 +38,7 @@
 
 
 (use-package diminish
+  :diminish auto-revert-mode
   :ensure t)
 
 (use-package company
@@ -63,12 +64,12 @@
   (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
   (setq prolog-system 'swi))
 
-(use-package skewer-mode
-  :ensure t
-  :config
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
-  (add-hook 'html-mode-hook 'skewer-html-mode))
+;; (use-package skewer-mode
+;;   :ensure t
+;;   :config
+;;   (add-hook 'js2-mode-hook 'skewer-mode)
+;;   (add-hook 'css-mode-hook 'skewer-css-mode)
+;;   (add-hook 'html-mode-hook 'skewer-html-mode))
 
 (use-package js2-mode
   :ensure t
@@ -115,6 +116,9 @@
 (use-package magit
   :ensure t
   :pin melpa-stable
+  :config
+  (setq magit-refresh-status-buffer nil)
+  (setq vc-handled-backends nil)
   :bind (("C-x g" . magit-status)
          ("C-c g b" . magit-branch-and-checkout)
          ("C-c g c" . magit-checkout)
@@ -163,7 +167,17 @@
   :ensure t)
 
 (use-package erlang
-  :ensure t)
+  :ensure t
+  :config
+  (defun my/erlang-mode-hook ()
+    ;; (setq erlang-electric-commands '(erlang-electric-comma erlang-electric-semicolon))
+    ;; (setq erlang-electric-newline-inhibit-list '(erlang-electric-gt))
+    ;; (setq erlang-electric-newline-inhibit t)
+    )
+  (add-hook 'erlang-mode-hook 'my/erlang-mode-hook)
+
+  (define-key erlang-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key erlang-mode-map (kbd "M-p") 'flycheck-previous-error))
 
 (use-package elpy
   :ensure t
@@ -203,6 +217,13 @@
   ;; use Skim as default pdf viewer
   ;; Skim's displayline is used for forward search (from .tex to .pdf)
   ;; option -b highlights the current line; option -g opens Skim in the background
+
+  (custom-set-variables
+     '(TeX-source-correlate-method 'synctex)
+     '(TeX-source-correlate-mode t)
+     '(TeX-source-correlate-start-server t))
+
+  ;; (TeX-view)
   (setq TeX-command-force "LatexMk")
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
@@ -547,7 +568,11 @@ Non-interactive arguments are Begin End Regexp"
                     helm-source-recentf
                     ;;helm-source-files-in-current-dir
                     ))
+
             :bind (("C-x f" . helm-for-files)
+                   ("M-s a" . helm-projectile-ag)
+                   ("M-s p" . helm-projectile-ag)
+                   ("M-s A" . projectile-ag)
                    ;;("C-c p p" . helm-projectile-switch-project)
                    ("C-x C-M-f" . helm-projectile-find-file-dwim)))
 
@@ -640,8 +665,9 @@ Non-interactive arguments are Begin End Regexp"
 (defun my/fork-window-to-frame ()
   "move the current window's buffer to another frame and kill the window"
   (interactive)
-  (let ((current (selected-window)))
-    (make-frame)
+  (let ((current (selected-window))
+        (new-f (make-frame)))
+    (set-frame-parameter new-f 'width 110)
     (delete-window current)))
 
 (defun my/projectile-pop-to-shell (arg)
@@ -722,6 +748,8 @@ Non-interactive arguments are Begin End Regexp"
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 
+(global-set-key (kbd "C-,")   'pop-tag-mark)
+
 ;; Show documentation/information with M-RET
 (define-key lisp-mode-shared-map (kbd "M-RET") 'live-lisp-describe-thing-at-point)
 
@@ -754,6 +782,10 @@ Non-interactive arguments are Begin End Regexp"
   (interactive)
   (dired-smart-shell-command "open -a Terminal $PWD" nil nil))
 
+(defun detexify ()
+  (interactive)
+  (dired-smart-shell-command "open -a Detexify" nil nil))
+
 (use-package yaml-mode
   :ensure t)
 
@@ -785,8 +817,9 @@ Non-interactive arguments are Begin End Regexp"
   (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
   (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
   (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "clj"))
+  (add-to-list 'dumb-jump-language-file-exts '(:language "erlang" :ext "erl"))
   (add-to-list 'dumb-jump-find-rules
-               '(:type "function" :language "clojure" :regex "\\\(def?\\s+JJJ\\j"))
+               '(:type "function" :language "erlang" :regex "^JJJ("))
 
   ;; (add-to-list 'dumb-jump-language-file-exts '(:language "haskell" :ext "hs"))
   ;; (add-to-list 'dumb-jump-find-rules
@@ -856,6 +889,7 @@ Non-interactive arguments are Begin End Regexp"
 
 (use-package ws-butler
   :ensure t
+  :diminish ws-butler-mode
   :config
   (ws-butler-global-mode))
 
@@ -912,12 +946,12 @@ Non-interactive arguments are Begin End Regexp"
     (filechart-display-image-inline "*filechart-chart*" filechart-temp-chart-file)
     (switch-to-buffer-other-window old-buf)))
 
-(use-package smartscan
-  :ensure t
-  :config
-  ;; conflicts with flycheck M-n M-p
-  ;; try smartscan-or-flycheck?
-  (add-to-list 'prog-mode-hook 'smartscan-mode))
+;; (use-package smartscan
+;;   :ensure t
+;;   :config
+;;   ;; conflicts with flycheck M-n M-p
+;;   ;; try smartscan-or-flycheck?
+;;   (add-to-list 'prog-mode-hook 'smartscan-mode))
 
 ;;; local stuff
 
