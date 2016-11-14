@@ -523,11 +523,12 @@ Non-interactive arguments are Begin End Regexp"
     (interactive)
     (let*
         ((buffers (mapcar (lambda (x) (format "%s" x)) (projectile-project-buffers)))
-         ;;(funcall (helm-attr 'buffer-list helm-source-buffers-list))
+         ;;(buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)))
          (candidates (cdr (helm-skip-boring-buffers buffers 'nil)))
          (root (projectile-project-root))
          (next (car candidates)))
-      (message "%s" candidates)
+      (unless next
+        (message "Last buffer for project %s" root))
       (kill-this-buffer)
       (if next
           (switch-to-buffer next)
