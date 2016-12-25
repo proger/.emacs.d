@@ -1,23 +1,5 @@
 ;;handy util fns
 
-(defun insert-date ()
-  "Insert a time-stamp according to locale's date and time format."
-  (interactive)
-  (insert (format-time-string "%c" (current-time))))
-
-(defun delete-this-buffer-and-file ()
-  "Removes file connected to current buffer and kills buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
-      (when (yes-or-no-p "Are you sure you want to remove this file? ")
-        (delete-file filename)
-        (kill-buffer buffer)
-        (message "File '%s' successfully removed" filename)))))
-
 (defun what-face (pos)
   "Return the name of the face at point"
   (interactive "d")
@@ -49,7 +31,7 @@
           (setq i (1+ i))))))))
 
 
-(defun my-toggle-window-split ()
+(defun my/toggle-window-split ()
   "vertical<->horizontal"
   (interactive)
   (if (= (count-windows) 2)

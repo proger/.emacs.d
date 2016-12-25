@@ -87,14 +87,6 @@
 
 ;;(global-set-key (kbd "C-c C-p") 'print-to-pdf)
 
-
-;; I couldn't resist ...
-;; Try executing M-x zork
-(require 'malyon)
-(defun zork ()
-  (interactive)
-  (malyon (locate-file "zork1.z5" load-path)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Patch for xscheme - Fixing evaluate-expression in debugger ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

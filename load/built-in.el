@@ -18,13 +18,6 @@
 (setq-default save-place t)
 (setq save-place-file (concat live-tmp-dir "places"))
 
-;;enable cua-mode for rectangular selections
-(require 'cua-base)
-(require 'cua-gmrk)
-(require 'cua-rect)
-(cua-mode 1)
-(setq cua-enable-cua-keys nil)
-
 ;;enable winner mode for C-c-(<left>|<right>) to navigate the history
 ;;of buffer changes i.e. undo a split screen
 (when (fboundp 'winner-mode)

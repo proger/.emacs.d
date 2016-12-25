@@ -34,6 +34,7 @@
         kill-region
         live-delete-whitespace-except-one
         mark-defun
+        markdown-cycle
         markdown-exdent-or-delete
         org-delete-char
         sgml-slash
@@ -46,4 +47,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        down-list
+        js2-mode-show-node
+        yas-expand
         ))

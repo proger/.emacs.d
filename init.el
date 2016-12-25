@@ -28,11 +28,10 @@
 		"load/built-in.el"
                 "load/util-fns.el"
                 "load/ido-conf.el"
-                "load/popwin-conf.el"
                 "load/tramp-conf.el"
-                ;;"load/highlight-flash-conf.el"
                 "load/lisp-conf.el"
                 ;;"load/js.el"
+                "load/mit.el" ;; https://groups.csail.mit.edu/mac/users/gjs/6.945/dont-panic/
 		))
   (load-file (concat my-user-emacs-directory file)))
 
@@ -45,12 +44,12 @@
   :ensure t
   :config (global-company-mode))
 
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-reload-all)
-  ;;(add-hook 'prog-mode-hook #'yas-minor-mode)
-  )
+;; (use-package yasnippet
+;;   :ensure t
+;;   :config
+;;   (yas-reload-all)
+;;   ;;(add-hook 'prog-mode-hook #'yas-minor-mode)
+;;   )
 
 (use-package nyan-mode
   :ensure t
@@ -63,13 +62,6 @@
   (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
   (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
   (setq prolog-system 'swi))
-
-;; (use-package skewer-mode
-;;   :ensure t
-;;   :config
-;;   (add-hook 'js2-mode-hook 'skewer-mode)
-;;   (add-hook 'css-mode-hook 'skewer-css-mode)
-;;   (add-hook 'html-mode-hook 'skewer-html-mode))
 
 (use-package js2-mode
   :ensure t
@@ -99,6 +91,13 @@
   :ensure t
   :config
   (setq mc/list-file (concat live-etc-dir "multiple-cursors-prefs.el"))
+
+  (use-package phi-search
+    :ensure t
+    :config
+    (global-set-key (kbd "C-s") 'phi-search)
+    (global-set-key (kbd "C-r") 'phi-search-backward))
+
   :bind (("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this)
@@ -185,6 +184,7 @@
   :config
   (elpy-enable)
   (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
+  (setq python-shell-completion-native nil)
   (elpy-use-ipython)
   (define-key python-mode-map (kbd "C-c C-l") 'elpy-shell-send-region-or-buffer)
   (define-key python-mode-map (kbd "C-c C-;") 'elpy-shell-send-current-statement)
@@ -351,7 +351,6 @@ Non-interactive arguments are Begin End Regexp"
 
 (use-package epa-file
   :config
-  (epa-file-enable)
   (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
   (epa-file-name-regexp-update)
   ;(setq epa-armor t)
@@ -475,11 +474,6 @@ Non-interactive arguments are Begin End Regexp"
   :ensure t
   :config
   (projectile-global-mode)
-  (add-hook 'ibuffer-hook
-            (lambda ()
-              (ibuffer-projectile-set-filter-groups)
-              (unless (eq ibuffer-sorting-mode 'alphabetic)
-                (ibuffer-do-sort-by-recency))))
   (setq projectile-switch-project-action 'projectile-dired))
 
 (define-key comint-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
@@ -521,18 +515,21 @@ Non-interactive arguments are Begin End Regexp"
 
   (defun my-kill-this-buffer ()
     (interactive)
-    (let*
-        ((buffers (mapcar (lambda (x) (format "%s" x)) (projectile-project-buffers)))
-         ;;(buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)))
-         (candidates (cdr (helm-skip-boring-buffers buffers 'nil)))
-         (root (projectile-project-root))
-         (next (car candidates)))
-      (unless next
-        (message "Last buffer for project %s" root))
-      (kill-this-buffer)
-      (if next
-          (switch-to-buffer next)
-        (dired root))))
+    (let ((projectile-require-project-root nil))
+      (if (projectile-project-p)
+          (let*
+              ((buffers (mapcar (lambda (x) (format "%s" x)) (projectile-project-buffers)))
+               ;;(buffers (funcall (helm-attr 'buffer-list helm-source-buffers-list)))
+               (candidates (cdr (helm-skip-boring-buffers buffers 'nil)))
+               (root (projectile-project-root))
+               (next (car candidates)))
+            (unless next
+                    (message "Last buffer for project %s" root))
+            (kill-this-buffer)
+            (if next
+                (switch-to-buffer next)
+                (dired root)))
+          (kill-this-buffer))))
 
   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
 
@@ -561,11 +558,11 @@ Non-interactive arguments are Begin End Regexp"
                    ("C-c M-i" . helm-multi-swoop)
                    ("C-c M-I" . helm-multi-swoop-all)))
 
-          (use-package helm-c-yasnippet
-            :ensure t
-            :config
-            (setq helm-yas-space-match-any-greedy t)
-            (global-set-key (kbd "C-c y") 'helm-yas-complete))
+          ;; (use-package helm-c-yasnippet
+          ;;   :ensure t
+          ;;   :config
+          ;;   (setq helm-yas-space-match-any-greedy t)
+          ;;   (global-set-key (kbd "C-c y") 'helm-yas-complete))
 
           (use-package helm-projectile
             :ensure t
@@ -581,6 +578,10 @@ Non-interactive arguments are Begin End Regexp"
                     helm-source-recentf
                     ;;helm-source-files-in-current-dir
                     ))
+
+            ;; (use-package nameframe-projectile
+            ;;   :ensure t
+            ;;   :config (nameframe-projectile-mode t))
 
             :bind (("C-x f" . helm-for-files)
                    ("M-s a" . helm-projectile-ag)
@@ -598,14 +599,12 @@ Non-interactive arguments are Begin End Regexp"
             :config (helm-descbinds-mode)))
 
   :bind (("M-x" . helm-M-x)
-         ("C-x b" . helm-mini)
-         ("C-x C-b" . helm-mini)
          ("C-x C-f" . helm-find-files)
          ("C-x j" . helm-imenu)
          ("C-x p" . helm-etags-select)
          ("M-y" . helm-show-kill-ring)
          ("M-X" . helm-resume)
-         ("M-l" . helm-mini)
+         ("M-l" . helm-projectile)
          ;;("M-O" . helm-resume)
          ;;("C-h SPC" . helm-all-mark-rings)
          ))
@@ -616,12 +615,14 @@ Non-interactive arguments are Begin End Regexp"
   :ensure t
   :bind (("C-c g g" . browse-at-remote)))
 
+(load "~/.emacs.d/vendor/PG/generic/proof-site")
 (use-package company-coq
   :ensure t
   :config
   (add-hook 'coq-mode-hook #'company-coq-mode)
   (add-to-list 'flycheck-disabled-checkers 'coq)
-  :bind (("C-c C-'" . proof-assert-until-point-interactive)))
+  :bind (("C-c C-'" . proof-assert-until-point-interactive)
+         ("M-r" . proof-goto-point)))
 
 (use-package nix-mode
   ;:ensure t
@@ -694,7 +695,7 @@ Non-interactive arguments are Begin End Regexp"
 
 (global-set-key (kbd "C-M-<return>") 'my/projectile-pop-to-shell)
 (global-set-key (kbd "C-x 5 5") 'my/fork-window-to-frame)
-(global-set-key (kbd "C-x 5 6") 'my-toggle-window-split)
+(global-set-key (kbd "C-x 5 6") 'my/toggle-window-split)
 
 (unless window-system
   (require 'mouse)
@@ -969,7 +970,7 @@ Non-interactive arguments are Begin End Regexp"
 ;;; local stuff
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
-;;(load "~/.emacs.d/vendor/PG/generic/proof-site")
+(load "~/.emacs.d/vendor/PG/generic/proof-site")
 ;;(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
 ;;(setq twelf-root "/Users/vladki/src/oplss/twelf/")
 ;;(load (concat twelf-root "emacs/twelf-init.el"))
@@ -1168,4 +1169,45 @@ to stylish-haskell."
 
 (global-set-key  (kbd "C-x <left>") 'previous-useful-buffer)
 (global-set-key  (kbd "C-x <right>") 'next-useful-buffer)
+(global-set-key  (kbd "C-x C-b") 'ibuffer)
 
+
+(define-key mac-apple-event-map [core-event open-documents] 'my-mac-ae-open-documents)
+
+(defun my-mac-ae-open-documents (event)
+  "Open the documents specified by the Apple event EVENT."
+  (interactive "e")
+  (let ((ae (mac-event-ae event)))
+    (dolist (file-name (mac-ae-list ae nil 'undecoded-file-name))
+      (if file-name
+          (dnd-open-local-file
+           (concat "file://"
+                   (mapconcat 'url-hexify-string
+                              (split-string file-name "/") "/")) nil)))
+    (let ((selection-range (mac-ae-selection-range ae))
+          (search-text (mac-ae-text-for-search ae)))
+      (cond (selection-range
+             (let ((line (car selection-range))
+                   (start (cadr selection-range))
+                   (end (nth 2 selection-range)))
+               (if (>= line 0)
+                   (progn
+                     (goto-char (point-min))
+                     (forward-line line)) ; (1- (1+ line))
+                 (if (and (>= start 0) (>= end 0))
+                     (progn (set-mark (1+ start))
+                            (goto-char (1+ end)))))))
+            ((stringp search-text)
+             (re-search-forward
+              (mapconcat 'regexp-quote (split-string search-text) "\\|")
+              nil t))))
+    (mac-odb-setup-buffer ae))
+  (select-frame-set-input-focus (make-frame)))
+
+(use-package elm-mode
+  :ensure t)
+
+(use-package highlight-sexp
+  :ensure t
+  :config
+  (global-highlight-sexp-mode))
