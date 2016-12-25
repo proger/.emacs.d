@@ -1209,5 +1209,6 @@ to stylish-haskell."
 
 (use-package highlight-sexp
   :ensure t
+  :diminish highlight-sexp-mode
   :config
   (global-highlight-sexp-mode))

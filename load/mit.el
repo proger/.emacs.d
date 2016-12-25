@@ -7,26 +7,14 @@
 ;; This is the place where you have installed scheme. Be sure to set
 ;; this to an appropriate value!!!
 ;; http://groups.csail.mit.edu/mac/users/gjs/6946/linux-install.htm
-(setq scheme-root "/usr/local/scmutils/mit-scheme")
+(setq scheme-root "/usr/local/scmutils")
 
 (setq scheme-program-name
       (concat
-       scheme-root "/bin/mit-scheme "
-       "--library " scheme-root "/lib/mit-scheme-x86-64 "
-       "--band " scheme-root "/lib/mit-scheme-x86-64/all.com "
-       "-heap 10000"))
-
-;; Mac OS X: Uncomment the following versions of scheme-root and
-;; scheme-program-name if you installed the pre-compiled Mac binary
-;;
-;; (setq scheme-root "/Applications/MIT-Scheme.app/Contents/Resources")
-;;
-;; (setq scheme-program-name
-;;       (concat
-;;        scheme-root "/mit-scheme "
-;;        "--library " scheme-root " "
-;;        "--band " scheme-root "/all.com "
-;;        "-heap 10000"))
+       scheme-root "/mit-scheme/bin/mit-scheme "
+       "--library " scheme-root "/mit-scheme/lib "
+       "--band " "edwin-mechanics.com"
+       " -heap 10000"))
 
 ;; Use the Edwin-like MIT/Scheme interpreter:
 (load "xscheme")
