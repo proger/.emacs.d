@@ -974,15 +974,20 @@ Non-interactive arguments are Begin End Regexp"
 
 ;;; local stuff
 
-;; (load "~/.emacs.d/vendor/PG/generic/proof-site")
+(use-package proof-site
+  :defer t
+  :mode ("\\.v\\'" . coq-mode)
+  :load-path
+  "~/.emacs.d/vendor/PG/generic/proof-site")
 
-;; (use-package company-coq
-;;   :ensure t
-;;   :config
-;;   (add-hook 'coq-mode-hook #'company-coq-mode)
-;;   (add-to-list 'flycheck-disabled-checkers 'coq)
-;;   :bind (("C-c C-'" . proof-assert-until-point-interactive)
-;;          ("M-r" . proof-goto-point)))
+(use-package company-coq
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+  (add-to-list 'flycheck-disabled-checkers 'coq)
+  :bind (("C-c C-'" . proof-assert-until-point-interactive)
+         ("M-r" . proof-goto-point)))
 
 ;;(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
 ;;(setq twelf-root "/Users/vladki/src/oplss/twelf/")
