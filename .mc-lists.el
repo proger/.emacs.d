@@ -27,6 +27,7 @@
         flycheck-next-error
         forward-sexp
         fsharp-ac/electric-dot
+        haskell-indentation-common-electric-command
         helm-M-x
         helm-show-kill-ring
         indent-for-tab-command
@@ -37,6 +38,11 @@
         markdown-cycle
         markdown-exdent-or-delete
         org-delete-char
+        paredit-backward
+        paredit-forward
+        paredit-forward-delete
+        paredit-forward-kill-word
+        paredit-open-square
         sgml-slash
         suspend-frame
         toggle-input-method
@@ -48,6 +54,8 @@
 (setq mc/cmds-to-run-once
       '(
         down-list
+        goto-line
         js2-mode-show-node
+        mac-mwheel-scroll
         yas-expand
         ))

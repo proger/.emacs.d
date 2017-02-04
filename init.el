@@ -8,6 +8,7 @@
 (package-initialize)
 
 (setq my-user-emacs-directory "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/vendor")
 
 ;; bootstrap: https://github.com/jwiegley/use-package
 (load-file (concat my-user-emacs-directory "bind-key.el"))
@@ -22,18 +23,17 @@
                          ("elpy" . "https://jorgenschaefer.github.io/packages/")))
 
 (dolist (file '("load/basic.el"
-		"load/directories.el"
-		"load/backup-dir.el"
-		"load/backup-dir-conf.el"
-		"load/built-in.el"
+                "load/directories.el"
+                "load/built-in.el"
                 "load/util-fns.el"
-                "load/ido-conf.el"
-                "load/tramp-conf.el"
+                ;;"load/ido-conf.el"
                 "load/lisp-conf.el"
-                ;;"load/js.el"
-                "load/mit.el" ;; https://groups.csail.mit.edu/mac/users/gjs/6.945/dont-panic/
-		))
-  (load-file (concat my-user-emacs-directory file)))
+                "load/backup-dir.el"
+                "load/backup-dir-conf.el"
+                "load/tramp-conf.el"
+                ;;"load/mit.el" ;; https://groups.csail.mit.edu/mac/users/gjs/6.945/dont-panic/
+                ))
+        (load-file (concat my-user-emacs-directory file)))
 
 
 (use-package diminish
@@ -51,11 +51,11 @@
 ;;   ;;(add-hook 'prog-mode-hook #'yas-minor-mode)
 ;;   )
 
-(use-package nyan-mode
-  :ensure t
-  ;;:init (nyan-start-music)
-  ;; (nyan-stop-music)
-  )
+;; (use-package nyan-mode
+;;   :ensure t
+;;   ;;:init (nyan-start-music)
+;;   ;; (nyan-stop-music)
+;;   )
 
 (use-package prolog
   :config
@@ -83,9 +83,9 @@
 (use-package input
   :bind (("C-\\" . toggle-input-method)))
 
-(use-package image+
-  :ensure t
-  :config (imagex-global-sticky-mode))
+;; (use-package image+
+;;   :ensure t
+;;   :config (imagex-global-sticky-mode))
 
 (use-package multiple-cursors
   :ensure t
@@ -103,9 +103,9 @@
          ("C-c C-<"     . mc/mark-all-like-this)
          ("C-M-z" . mc/edit-lines)))
 
-(use-package ace-jump-mode
-  :ensure t
-  :bind (("C-o" . ace-jump-mode)))
+;; (use-package ace-jump-mode
+;;   :ensure t
+;;   :bind (("C-o" . ace-jump-mode)))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -143,14 +143,15 @@
 (use-package paredit
   :ensure t)
 
-(use-package puppet-mode
-  :ensure t)
+;; (use-package puppet-mode
+;;   :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t)
 
 (use-package web-mode
-  :ensure t)
+  :ensure t
+  :mode (("\\.html\\'" . web-mode)))
 
 (use-package markdown-mode
   :ensure t
@@ -162,11 +163,12 @@
   (setq markdown-command "multimarkdown")
   (setq markdown-enable-math t))
 
-(use-package writeroom-mode
-  :ensure t)
+;; (use-package writeroom-mode
+;;   :ensure t)
 
 (use-package erlang
   :ensure t
+  :mode (("\\.erl\\'" . erlang-mode))
   :config
   (defun my/erlang-mode-hook ()
     ;; (setq erlang-electric-commands '(erlang-electric-comma erlang-electric-semicolon))
@@ -182,24 +184,35 @@
   :ensure t
   :pin elpy
   :config
+  (setq elpy-modules '(elpy-module-sane-defaults
+                       elpy-module-company
+                       elpy-module-eldoc
+                       elpy-module-flymake
+                       elpy-module-highlight-indentation
+                       elpy-module-pyvenv
+                       ;;elpy-module-yasnippet
+                       ;;elpy-module-django
+                       ))
+
   (elpy-enable)
   (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
   (setq python-shell-completion-native nil)
   (elpy-use-ipython)
   (define-key python-mode-map (kbd "C-c C-l") 'elpy-shell-send-region-or-buffer)
   (define-key python-mode-map (kbd "C-c C-;") 'elpy-shell-send-current-statement)
-  )
+  (define-key python-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key python-mode-map (kbd "M-p") 'flycheck-previous-error))
 
-(use-package ein
-  ;; https://github.com/millejoh/emacs-ipython-notebook
-  :ensure t)
+;; (use-package ein
+;;   ;; https://github.com/millejoh/emacs-ipython-notebook
+;;   :ensure t)
 
-(use-package idris-mode
-  :ensure t)
+;; (use-package idris-mode
+;;   :ensure t)
 
-(use-package ess
-  :ensure t
-  :pin melpa-stable)
+;; (use-package ess
+;;   :ensure t
+;;   :pin melpa-stable)
 
 ;; (use-package ess-view
 ;;   :ensure t)
@@ -294,7 +307,6 @@ Non-interactive arguments are Begin End Regexp"
                               (v--infer-indentation-style)))))
 
 
-
 (comment
  (use-package cmake-font-lock
    :ensure t))
@@ -323,10 +335,10 @@ Non-interactive arguments are Begin End Regexp"
 ;;   (eval-after-load 'company
 ;;   '(add-to-list 'company-backends 'company-irony)))
 
-(use-package swift-mode
-  :ensure t
-  :config
-  (add-to-list 'flycheck-checkers 'swift))
+;; (use-package swift-mode
+;;   :ensure t
+;;   :config
+;;   (add-to-list 'flycheck-checkers 'swift))
 
 (use-package win-switch
   :ensure t
@@ -356,24 +368,24 @@ Non-interactive arguments are Begin End Regexp"
   ;(setq epa-armor t)
   )
 
-(use-package winner
-  :bind
-  (("C-c b" . winner-undo)
-   ("C-c f" . winner-redo)))
+;; (use-package winner
+;;   :bind
+;;   (("C-c b" . winner-undo)
+;;    ("C-c f" . winner-redo)))
 
 (use-package dired
   :config
   (setq dired-dwim-target t))
 
-(use-package go-mode
-  :ensure t)
+;; (use-package go-mode
+;;   :ensure t)
 
-(use-package fstar-mode
-  :ensure t)
+;; (use-package fstar-mode
+;;   :ensure t)
 
-(use-package fsharp-mode
-  :mode "\\.fs[iylx]?$"
-  :ensure t)
+;; (use-package fsharp-mode
+;;   :mode "\\.fs[iylx]?$"
+;;   :ensure t)
 
 (use-package glsl-mode
   :mode "\\.(glsl|vert|frag|geom)$"
@@ -604,7 +616,9 @@ Non-interactive arguments are Begin End Regexp"
          ("C-x p" . helm-etags-select)
          ("M-y" . helm-show-kill-ring)
          ("M-X" . helm-resume)
-         ("M-l" . helm-projectile)
+         ;;("M-l" . helm-projectile)
+         ("M-l" . helm-mini)
+         ("M-o" . helm-projectile)
          ;;("M-O" . helm-resume)
          ;;("C-h SPC" . helm-all-mark-rings)
          ))
@@ -614,15 +628,6 @@ Non-interactive arguments are Begin End Regexp"
 (use-package browse-at-remote
   :ensure t
   :bind (("C-c g g" . browse-at-remote)))
-
-(load "~/.emacs.d/vendor/PG/generic/proof-site")
-(use-package company-coq
-  :ensure t
-  :config
-  (add-hook 'coq-mode-hook #'company-coq-mode)
-  (add-to-list 'flycheck-disabled-checkers 'coq)
-  :bind (("C-c C-'" . proof-assert-until-point-interactive)
-         ("M-r" . proof-goto-point)))
 
 (use-package nix-mode
   ;:ensure t
@@ -846,9 +851,9 @@ Non-interactive arguments are Begin End Regexp"
   :config
   (add-to-list 'auto-mode-alist '("\\.\\(sml\\|sig\\)\\'" . sml-mode)))
 
-(use-package raml-mode
-  ;:ensure t
-  :init)
+;; (use-package raml-mode
+;;   ;:ensure t
+;;   :init)
 
 (comment
  (set-fringe-mode
@@ -969,8 +974,16 @@ Non-interactive arguments are Begin End Regexp"
 
 ;;; local stuff
 
-(add-to-list 'load-path "~/.emacs.d/vendor")
-(load "~/.emacs.d/vendor/PG/generic/proof-site")
+;; (load "~/.emacs.d/vendor/PG/generic/proof-site")
+
+;; (use-package company-coq
+;;   :ensure t
+;;   :config
+;;   (add-hook 'coq-mode-hook #'company-coq-mode)
+;;   (add-to-list 'flycheck-disabled-checkers 'coq)
+;;   :bind (("C-c C-'" . proof-assert-until-point-interactive)
+;;          ("M-r" . proof-goto-point)))
+
 ;;(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
 ;;(setq twelf-root "/Users/vladki/src/oplss/twelf/")
 ;;(load (concat twelf-root "emacs/twelf-init.el"))
@@ -1116,8 +1129,17 @@ to stylish-haskell."
   (add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
   ;(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
   (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
-  (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error))
+  (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error)
+  (define-key haskell-mode-map (kbd "M-r") 'my-intero-repl-load-nopop)
+  (add-hook 'haskell-mode-hook
+          (lambda ()
+             (add-hook 'after-save-hook 'my-intero-repl-load-nopop nil t))))
 
+(defun my-intero-repl-load-nopop ()
+  (interactive)
+  (let ((buf (current-buffer)))
+        (intero-repl-load)
+        (pop-to-buffer buf)))
 
 ;;;; useful buffers (taken from spacemacs)
 
@@ -1171,6 +1193,8 @@ to stylish-haskell."
 (global-set-key  (kbd "C-x <right>") 'next-useful-buffer)
 (global-set-key  (kbd "C-x C-b") 'ibuffer)
 
+(global-set-key  (kbd "M-r") 'recompile)
+
 
 (define-key mac-apple-event-map [core-event open-documents] 'my-mac-ae-open-documents)
 
@@ -1204,11 +1228,42 @@ to stylish-haskell."
     (mac-odb-setup-buffer ae))
   (select-frame-set-input-focus (make-frame)))
 
-(use-package elm-mode
-  :ensure t)
+;; (use-package elm-mode
+;;   :ensure t)
 
 (use-package highlight-sexp
   :ensure t
   :diminish highlight-sexp-mode
   :config
   (global-highlight-sexp-mode))
+
+;; (use-package octave
+;;   :ensure t
+;;   :mode (("\\.m$" . octave-mode)))
+
+(eval-after-load
+ 'octave
+ '(defun inferior-octave-output-digest (_proc string)
+    "Special output filter for the inferior Octave process.
+Save all output between newlines into `inferior-octave-output-list', and
+the rest to `inferior-octave-output-string'."
+    (setq string (concat inferior-octave-output-string string))
+    (while (string-match "\n" string)
+           (setq inferior-octave-output-list
+                 (append inferior-octave-output-list
+                         (list (substring string 0 (match-beginning 0))))
+                 string (substring string (match-end 0))))
+    (setq inferior-octave-receive-in-progress nil)   ;;; XXX THIS
+    (if (string-match inferior-octave-prompt string)
+        (setq inferior-octave-receive-in-progress nil))
+    (setq inferior-octave-output-string string)))
+
+
+(defun stop-using-minibuffer ()
+  "kill the minibuffer"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+        (abort-recursive-edit)))
+
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
+
+;; (stop-using-minibuffer)
