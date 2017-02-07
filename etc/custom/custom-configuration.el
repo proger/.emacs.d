@@ -184,6 +184,7 @@ static char *gnus-pointer[] = {
       (quote backward-word)
       (quote forward-word)))))
  '(prolog-system (quote swi))
+ '(proof-splash-enable nil)
  '(safe-local-variable-values
    (quote
     ((eval setq-local flycheck-erlang-library-path
