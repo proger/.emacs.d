@@ -187,13 +187,16 @@
   (setq elpy-modules '(elpy-module-sane-defaults
                        elpy-module-company
                        elpy-module-eldoc
-                       elpy-module-flymake
+                       ;;elpy-module-flymake
                        elpy-module-highlight-indentation
                        elpy-module-pyvenv
                        ;;elpy-module-yasnippet
                        ;;elpy-module-django
                        ))
 
+  ;; (add-to-list 'flycheck-disabled-checkers 'python-pylint)
+  ;; (add-to-list 'flycheck-disabled-checkers 'python-pycompile)
+  ;; (add-to-list 'flycheck-disabled-checkers 'python-flake8)
   (elpy-enable)
   (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
   (setq python-shell-completion-native nil)
@@ -669,6 +672,7 @@ Non-interactive arguments are Begin End Regexp"
 
   (define-key nix-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key nix-mode-map (kbd "M-p") 'flycheck-previous-error)
+  ;;(define-key nix-mode-map (kbd "TAB") 'indent-for-tab-command)
   (define-key nix-mode-map (kbd "TAB") 'nix-indent-line)
 
   (add-to-list 'flycheck-checkers 'nix))
@@ -974,20 +978,21 @@ Non-interactive arguments are Begin End Regexp"
 
 ;;; local stuff
 
+
+
 (use-package proof-site
-  :defer t
   :mode ("\\.v\\'" . coq-mode)
-  :load-path
-  "~/.emacs.d/vendor/PG/generic"
+  :load-path "~/.emacs.d/vendor/PG/generic"
   :config
   (use-package company-coq
     :ensure t
     :config
     (add-hook 'coq-mode-hook #'company-coq-mode)
-    (add-to-list 'flycheck-disabled-checkers 'coq))
-  :bind
-  ("C-c C-'" . proof-assert-until-point-interactive)
-  ("M-r" . proof-goto-point))
+    (add-hook 'coq-mode-hook
+              (lambda ()
+                (define-key coq-mode-map (kbd "M-r") 'proof-goto-point)
+                (define-key coq-mode-map (kbd "C-c C-'") 'proof-assert-until-point-interactive)))
+    (add-to-list 'flycheck-disabled-checkers 'coq)))
 
 ;;(load "/Users/vladki/.opam/4.02.0/share/emacs/site-lisp/tuareg-site-file")
 ;;(setq twelf-root "/Users/vladki/src/oplss/twelf/")
@@ -1240,7 +1245,8 @@ to stylish-haskell."
   :ensure t
   :diminish highlight-sexp-mode
   :config
-  (global-highlight-sexp-mode))
+  (global-highlight-sexp-mode)
+  (setq hl-sexp-background-color "#f6f6f6"))
 
 ;; (use-package octave
 ;;   :ensure t

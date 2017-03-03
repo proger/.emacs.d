@@ -145,7 +145,7 @@ static char *gnus-pointer[] = {
     ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
- '(hl-sexp-background-color "#f5f5f5")
+ '(hl-sexp-background-color "#f8f8f8")
  '(ibuffer-expert t)
  '(imagex-auto-adjust-mode t)
  '(imagex-global-sticky-mode t)
