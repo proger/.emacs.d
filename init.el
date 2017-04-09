@@ -239,7 +239,14 @@
      '(TeX-source-correlate-mode t)
      '(TeX-source-correlate-start-server t))
 
-  ;; (TeX-view)
+  (defun my/latex-save-buffer-always ()
+    "Save the buffer even if it is not modified."
+    (interactive)
+    (set-buffer-modified-p t)
+    (save-buffer))
+
+  (define-key LaTeX-mode-map (kbd "C-x C-s") 'my/latex-save-buffer-always)
+
   (define-key LaTeX-mode-map (kbd "M-n") 'TeX-next-error)
   (define-key LaTeX-mode-map (kbd "M-p") 'TeX-previous-error)
 
@@ -250,9 +257,11 @@
   (add-hook 'LaTeX-mode-hook
           (lambda ()
             (add-hook 'after-save-hook
-                      (when-let ((tex-help (get-buffer-window "*TeX Help*")))
-                        (delete-window tex-help))
-                      (lambda () (TeX-command-sequence t t)) 'append 'local))))
+                      (lambda ()
+                        (when-let ((tex-help (get-buffer-window "*TeX Help*")))
+                          (delete-window tex-help))
+                        (TeX-command-sequence t t))
+                      'append 'local))))
 
 (use-package auctex-latexmk
   :ensure t
