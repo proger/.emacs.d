@@ -19,11 +19,12 @@
   ;; domain name
   (setq system-name (car (split-string system-name "\\.")))
 
-  ; big window by default
-  (add-to-list 'default-frame-alist '(left . 10))
-  (add-to-list 'default-frame-alist '(top . 10))
-  (add-to-list 'default-frame-alist '(height . 58))
-  (add-to-list 'default-frame-alist '(width . 200))
+  ;; (message "%s %s %s" (frame-position) (frame-height) (frame-width))
+  ;; big window by default
+  (add-to-list 'default-frame-alist '(left . 60))
+  (add-to-list 'default-frame-alist '(top . 0))
+  (add-to-list 'default-frame-alist '(height . 62))
+  (add-to-list 'default-frame-alist '(width . 135))
 
   (defun half ()
     (interactive)

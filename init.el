@@ -240,13 +240,19 @@
      '(TeX-source-correlate-start-server t))
 
   ;; (TeX-view)
+  (define-key LaTeX-mode-map (kbd "M-n") 'TeX-next-error)
+  (define-key LaTeX-mode-map (kbd "M-p") 'TeX-previous-error)
+
   (setq TeX-command-force "LatexMk")
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
         '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -r -b -g %n %o %b")))
   (add-hook 'LaTeX-mode-hook
           (lambda ()
-             (add-hook 'after-save-hook (lambda () (TeX-command-sequence t t)) 'append 'local))))
+            (add-hook 'after-save-hook
+                      (when-let ((tex-help (get-buffer-window "*TeX Help*")))
+                        (delete-window tex-help))
+                      (lambda () (TeX-command-sequence t t)) 'append 'local))))
 
 (use-package auctex-latexmk
   :ensure t
@@ -622,6 +628,7 @@ Non-interactive arguments are Begin End Regexp"
          ;;("M-l" . helm-projectile)
          ("M-l" . helm-mini)
          ("M-o" . helm-projectile)
+         ("C-x h" . helm-mark-ring)
          ;;("M-O" . helm-resume)
          ;;("C-h SPC" . helm-all-mark-rings)
          ))
@@ -1278,3 +1285,11 @@ the rest to `inferior-octave-output-string'."
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;; (stop-using-minibuffer)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
+
+(add-hook 'agda2-mode-hook (lambda ()
+                             (add-hook 'after-change-major-mode-hook
+                                       (lambda () (highlight-sexp-mode -1))
+                                       :append :local)))

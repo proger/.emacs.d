@@ -17,6 +17,7 @@
         c-electric-star
         c-end-of-defun
         c-indent-line-or-region
+        company-coq-maybe-exit-snippet
         cua-copy-region
         cua-cut-region
         cua-paste
@@ -43,6 +44,7 @@
         paredit-forward-delete
         paredit-forward-kill-word
         paredit-open-square
+        pg-protected-undo
         sgml-slash
         suspend-frame
         toggle-input-method
@@ -53,8 +55,6 @@
 
 (setq mc/cmds-to-run-once
       '(
-        down-list
-        goto-line
         js2-mode-show-node
         mac-mwheel-scroll
         yas-expand
