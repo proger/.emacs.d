@@ -27,7 +27,7 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
+    ("43c1a8090ed19ab3c0b1490ce412f78f157d69a29828aa977dae941b994b4147" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "40bc0ac47a9bd5b8db7304f8ef628d71e2798135935eb450483db0dbbfff8b11" "b7b2cd8c45e18e28a14145573e84320795f5385895132a646ff779a141bbda7e" "0ec59d997a305e938d9ec8f63263a8fc12e17990aafc36ff3aff9bc5c5a202f0" "8453c6ba2504874309bdfcda0a69236814cefb860a528eb978b5489422cb1791" "9ff70d8009ce8da6fa204e803022f8160c700503b6029a8d8880a7a78c5ff2e5" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "b571f92c9bfaf4a28cb64ae4b4cdbda95241cd62cf07d942be44dc8f46c491f4" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "c86f868347919095aa44d2a6129dd714cbcf8feaa88ba954f636295b14ceff8f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "71f976f739af2d418242ea668dcb5b520a7043edd22ccf598e3a4fdf415f80f7" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "c1fb68aa00235766461c7e31ecfc759aa2dd905899ae6d95097061faeb72f9ee" default)))
  '(default-input-method "ukrainian-computer")
  '(diary-entry-marker (quote font-lock-variable-name-face))
  '(elm-indent-offset 2)
@@ -94,6 +94,7 @@ static char *gnus-pointer[] = {
    (quote
     ("Data.ByteString" "Data.ByteString.Lazy" "Data.Conduit" "Data.Function" "Data.List" "Data.Map" "Data.Maybe" "Data.Monoid" "Data.Ord")))
  '(haskell-doc-prettify-types (quote nil))
+ '(haskell-hoogle-url "https://www.stackage.org/lts/hoogle?q=%s")
  '(haskell-indent-spaces 2)
  '(haskell-indentation-show-indentations (quote nil))
  '(haskell-interactive-mode-eval-mode (quote haskell-mode))
@@ -167,7 +168,7 @@ static char *gnus-pointer[] = {
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (emojify dash-functional cider helm projectile auctex julia-mode markdown-mode js2-mode company octave-mode highlight-sexp-mode elm-mode phi-search nameframe-projectile haskell-mode dumb-jump magit indy flycheck elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
+    (cql-mode emojify dash-functional cider helm projectile auctex julia-mode markdown-mode js2-mode company octave-mode highlight-sexp-mode elm-mode phi-search nameframe-projectile haskell-mode dumb-jump magit indy flycheck elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(preview-auto-reveal
@@ -183,7 +184,31 @@ static char *gnus-pointer[] = {
       (quote backward-word)
       (quote forward-word)))))
  '(prolog-system (quote swi))
+ '(proof-prog-name "/Users/vladki/src/HoTT/hoqtop")
  '(proof-splash-enable nil)
+ '(safe-local-eval-forms
+   (quote
+    ((add-hook
+      (quote write-file-hooks)
+      (quote time-stamp))
+     (add-hook
+      (quote write-file-functions)
+      (quote time-stamp))
+     (add-hook
+      (quote before-save-hook)
+      (quote time-stamp)
+      nil t)
+     (add-hook
+      (quote before-save-hook)
+      (quote delete-trailing-whitespace)
+      nil t)
+     (let
+         ((default-directory
+            (locate-dominating-file buffer-file-name ".dir-locals.el")))
+       (make-local-variable
+        (quote coq-prog-name))
+       (setq coq-prog-name
+             (expand-file-name "../hoqtop"))))))
  '(safe-local-variable-values
    (quote
     ((eval setq-local flycheck-erlang-library-path

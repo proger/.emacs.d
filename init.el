@@ -22,6 +22,9 @@
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("elpy" . "https://jorgenschaefer.github.io/packages/")))
 
+(setenv "LC_ALL" "C")
+(setenv "NIX_PATH" "nixpkgs=/Users/vladki/src/nixpkgs-channels")
+
 (dolist (file '("load/basic.el"
                 "load/directories.el"
                 "load/built-in.el"
@@ -609,11 +612,14 @@ Non-interactive arguments are Begin End Regexp"
                     ;;helm-source-files-in-current-dir
                     ))
 
+            (setq helm-projectile-sources-list
+                  '(helm-source-projectile-files-list))
+
             ;; (use-package nameframe-projectile
             ;;   :ensure t
             ;;   :config (nameframe-projectile-mode t))
 
-            :bind (("C-x f" . helm-for-files)
+            :bind (("C-x f" . helm-projectile)
                    ("M-s a" . helm-projectile-ag)
                    ("M-s p" . helm-projectile-ag)
                    ("M-s A" . projectile-ag)
@@ -809,7 +815,9 @@ Non-interactive arguments are Begin End Regexp"
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((dot . t)))
+ '((dot . t)
+   (sh . t)))
+
 
 (defun my/org-confirm-babel-evaluate (lang body)
   (not (string= lang "dot")))
@@ -1037,7 +1045,15 @@ Non-interactive arguments are Begin End Regexp"
 ;; uses completing-read
 
 (setq haskell-import-mapping
-      '(("Data.Text" . "import qualified Data.Text as T
+      '(("Data.List" . "import qualified Data.List as List
+")
+        ("Data.Monoid" . "import Data.Monoid
+")
+        ("Data.Function" . "import Data.Function (on)
+")
+        ("Data.Tree" . "import Data.Tree
+")
+        ("Data.Text" . "import qualified Data.Text as T
 import Data.Text (Text)
 ")
         ("Data.Text.Lazy" . "import qualified Data.Text.Lazy as LT
@@ -1063,14 +1079,24 @@ import Data.Set (Set)
 ")
         ("Data.Vector" . "import qualified Data.Vector as V
 import Data.Vector (Vector)
+import qualified Data.Vector.Generic as G
 ")
         ("Data.Vector.Storable" . "import qualified Data.Vector.Storable as SV
 import Data.Vector (Vector)
 ")
-        ("Data.Conduit.List" . "import qualified Data.Conduit.List as CL
+;;         ("Data.Conduit.List" . "import qualified Data.Conduit.List as CL
+;; ")
+;;         ("Data.Conduit.Binary" . "import qualified Data.Conduit.Binary as CB
+        ;; ")
+        ("System.Randoms.MWC" . "import qualified System.Random.MWC as MWC
+import qualified System.Random.MWC.Distributions as MWC
+import Control.Monad.Primitive (PrimMonad)
 ")
-        ("Data.Conduit.Binary" . "import qualified Data.Conduit.Binary as CB
-")))
+        ("Linear" . "import Linear
+")
+        ("Hspec" . "import Test.Hspec
+")
+        ))
 
 
 (defun haskell-capitalize-module (m)
@@ -1156,16 +1182,62 @@ to stylish-haskell."
   ;(define-key haskell-mode-map (kbd "C-i") 'haskell-fast-add-import)
   (define-key haskell-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key haskell-mode-map (kbd "M-p") 'flycheck-previous-error)
-  (define-key haskell-mode-map (kbd "M-r") 'my-intero-repl-load-nopop)
+  (define-key haskell-mode-map (kbd "M-r") 'my-intero-app-run)
+  (define-key haskell-mode-map (kbd "C-c C-i") 'my-intero-hoogle-module-at-point)
+  (define-key haskell-mode-map (kbd "C-c C-h") 'my-intero-hoogle-module-at-point)
+
+  (defun my/projectile-test-suffix (project-type)
+    (if (eq project-type 'haskell-stack) "Spec" (projectile-test-suffix project-type)))
+  (setq projectile-test-suffix-function #'my/projectile-test-suffix)
+
   (add-hook 'haskell-mode-hook
           (lambda ()
              (add-hook 'after-save-hook 'my-intero-repl-load-nopop nil t))))
 
+(defun my-intero-app-run ()
+  (interactive)
+  (when (bound-and-true-p intero-mode)
+    (let ((buf (current-buffer))
+          (repl-buffer (intero-repl-buffer nil t)))
+      (with-current-buffer repl-buffer
+        (comint-interrupt-subjob)
+        (comint-simple-send
+         (get-buffer-process (current-buffer))
+         ":load src/App.hs")
+        (comint-simple-send
+         (get-buffer-process (current-buffer))
+         "App.run")
+        (goto-char (point-max)))
+      (pop-to-buffer buf))))
+
+
 (defun my-intero-repl-load-nopop ()
   (interactive)
-  (let ((buf (current-buffer)))
-        (intero-repl-load)
-        (pop-to-buffer buf)))
+  (when
+    ;; nil
+    (bound-and-true-p intero-mode)
+    (let ((buf (current-buffer))
+          (module-name (haskell-guess-module-name))
+          (repl-buffer (intero-repl-buffer nil t))
+          (file (intero-localize-path (intero-temp-file-name))))
+
+      (with-current-buffer repl-buffer
+        (comint-simple-send (get-buffer-process (repl-buffer))
+                            (concat ":l " file)) ;; maybe :r ?
+        (comint-simple-send (get-buffer-process (repl-buffer))
+                            (if module-name
+                                (concat module-name ".spec")
+                              "spec"))
+        (setq intero-repl-last-loaded file)
+        (goto-char (point-max)))
+    ;;(pop-to-buffer buf)
+    )))
+
+(defun my-intero-hoogle-module-at-point (ident)
+  (interactive (list (intero-ident-at-point)))
+  (let ((info (intero-get-info-of ident)))
+    (when (string-match "Defined in ‘\\(?1:[^’]+\\)’" info)
+      (haskell-hoogle (match-string 1 info)))))
 
 ;;;; useful buffers (taken from spacemacs)
 
@@ -1224,9 +1296,12 @@ to stylish-haskell."
 
 (define-key mac-apple-event-map [core-event open-documents] 'my-mac-ae-open-documents)
 
+
 (defun my-mac-ae-open-documents (event)
-  "Open the documents specified by the Apple event EVENT."
+  "Open the documents specified by the Apple event EVENT using a new frame."
   (interactive "e")
+  ;; use a new frame and open it first!
+  (select-frame-set-input-focus (make-frame))
   (let ((ae (mac-event-ae event)))
     (dolist (file-name (mac-ae-list ae nil 'undecoded-file-name))
       (if file-name
@@ -1251,8 +1326,7 @@ to stylish-haskell."
              (re-search-forward
               (mapconcat 'regexp-quote (split-string search-text) "\\|")
               nil t))))
-    (mac-odb-setup-buffer ae))
-  (select-frame-set-input-focus (make-frame)))
+    (mac-setup-odb-buffer ae)))
 
 ;; (use-package elm-mode
 ;;   :ensure t)
@@ -1302,3 +1376,10 @@ the rest to `inferior-octave-output-string'."
                              (add-hook 'after-change-major-mode-hook
                                        (lambda () (highlight-sexp-mode -1))
                                        :append :local)))
+
+
+(use-package cql-mode
+  :ensure t)
+
+(use-package go-mode
+  :ensure t)
