@@ -34,6 +34,8 @@
                 "load/backup-dir.el"
                 "load/backup-dir-conf.el"
                 "load/tramp-conf.el"
+                "load/osascript.el"
+                "load/temp-mode.el"
                 ;;"load/mit.el" ;; https://groups.csail.mit.edu/mac/users/gjs/6.945/dont-panic/
                 ))
         (load-file (concat my-user-emacs-directory file)))
@@ -73,6 +75,8 @@
   :config
   (setq js2-basic-offset 2)
 
+  (define-key js2-mode-map (kbd "M-.") 'flow-get-def)
+  (define-key js2-mode-map (kbd "C-c C-t") 'flow-type-at-pos)
   (define-key js2-mode-map (kbd "M-n") 'flycheck-next-error)
   (define-key js2-mode-map (kbd "M-p") 'flycheck-previous-error))
 
@@ -81,6 +85,54 @@
   :config
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
   (js2r-add-keybindings-with-prefix "C-c C-m"))
+
+
+;;(setq flow_binary "npm run flow --")
+(setq flow_binary "flow")
+
+(defun flow-start ()
+  (shell-command (format "%s start" flow_binary)))
+
+(defun flow-stop ()
+  (shell-command (format "%s stop" flow_binary)))
+
+(defun flow-type-at-pos ()
+  "show type"
+  (interactive)
+  (let ((file (buffer-file-name))
+        (line (line-number-at-pos))
+        (col (current-column))
+        (buffer (current-buffer)))
+    (switch-to-buffer-other-window "*Shell Command Output*")
+    ;;(flow-start)
+    (shell-command
+     (format "%s type-at-pos --from emacs %s %d %d"
+             flow_binary
+             file
+             line
+             (1+ col)))
+    (compilation-mode)
+    (switch-to-buffer-other-window buffer))
+)
+
+(defun flow-get-def ()
+  "jump to definition"
+  (interactive)
+  (let ((file (buffer-file-name))
+        (line (line-number-at-pos))
+        (col (current-column))
+        (buffer (current-buffer)))
+    (switch-to-buffer-other-window "*Shell Command Output*")
+    (flow-start)
+    (shell-command
+     (format "%s get-def --from emacs %s %d %d"
+             flow_binary
+             file
+             line
+             (1+ col)))
+    (compilation-mode))
+)
+
 
 
 (use-package input
@@ -140,7 +192,7 @@
 (use-package flycheck
  :ensure t
  :config
- (setq-default flycheck-disabled-checkers '(emacs-lisp emacs-lisp-checkdoc))
+ (setq-default flycheck-disabled-checkers '(emacs-lisp emacs-lisp-checkdoc jshint))
  (global-flycheck-mode))
 
 (use-package paredit
@@ -396,7 +448,15 @@ Non-interactive arguments are Begin End Regexp"
 
 (use-package dired
   :config
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
+  (setq dired-omit-mode t)
+  (setq dired-omit-files
+        (concat dired-omit-files "\\|^\\.ipynb_checkpoints$\\|\\.DS_Store"))
+  (add-hook 'dired-mode-hook 'hl-line-mode)
+  (add-hook 'dired-mode-hook (lambda ()
+                               (setq-local cursor-type 'box))))
+
+(global-hl-line-mode)
 
 ;; (use-package go-mode
 ;;   :ensure t)
@@ -715,6 +775,16 @@ Non-interactive arguments are Begin End Regexp"
     (set-frame-parameter new-f 'width 110)
     (delete-window current)))
 
+(defun my/delete-frame-or-start-fresh ()
+  (interactive)
+  (if (= 1 (length (frame-list)))
+      (progn
+        (projectile-kill-buffers)
+        (let ((current (selected-frame))
+              (new-f (switch-to-buffer-other-frame "*scratch*")))
+          (delete-frame current)))
+    (delete-frame)))
+
 (defun my/projectile-pop-to-shell (arg)
   "pop to a shell identified with a current project"
   (interactive "p")
@@ -726,6 +796,7 @@ Non-interactive arguments are Begin End Regexp"
 
 (global-set-key (kbd "C-M-<return>") 'my/projectile-pop-to-shell)
 (global-set-key (kbd "C-x 5 5") 'my/fork-window-to-frame)
+(global-set-key (kbd "C-x 5 0") 'my/delete-frame-or-start-fresh)
 (global-set-key (kbd "C-x 5 6") 'my/toggle-window-split)
 
 (unless window-system
@@ -1222,9 +1293,9 @@ to stylish-haskell."
           (file (intero-localize-path (intero-temp-file-name))))
 
       (with-current-buffer repl-buffer
-        (comint-simple-send (get-buffer-process (repl-buffer))
+        (comint-simple-send (get-buffer-process repl-buffer)
                             (concat ":l " file)) ;; maybe :r ?
-        (comint-simple-send (get-buffer-process (repl-buffer))
+        (comint-simple-send (get-buffer-process repl-buffer)
                             (if module-name
                                 (concat module-name ".spec")
                               "spec"))
@@ -1367,6 +1438,8 @@ the rest to `inferior-octave-output-string'."
 
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
+(global-set-key (kbd "C-c C-x") 'stop-using-minibuffer)
+
 ;; (stop-using-minibuffer)
 
 (load-file (let ((coding-system-for-read 'utf-8))
@@ -1378,8 +1451,27 @@ the rest to `inferior-octave-output-string'."
                                        :append :local)))
 
 
+
 (use-package cql-mode
   :ensure t)
 
 (use-package go-mode
   :ensure t)
+
+
+(use-package flycheck-flow
+  :ensure t
+  :config
+  (flycheck-add-next-checker 'javascript-jshint 'javascript-flow))
+
+(use-package typescript-mode
+  :ensure t
+  :config
+
+  (define-derived-mode flow-mode typescript-mode "Flow" "JavaScript with Flow type checking")
+  (define-key flow-mode-map (kbd ":") nil)
+  (flycheck-add-mode 'javascript-flow 'flow-mode)
+  (define-key flow-mode-map (kbd "M-.") 'flow-get-def)
+  (define-key flow-mode-map (kbd "C-c C-t") 'flow-type-at-pos)
+  (define-key flow-mode-map (kbd "M-n") 'flycheck-next-error)
+  (define-key flow-mode-map (kbd "M-p") 'flycheck-previous-error))

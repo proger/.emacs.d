@@ -26,6 +26,10 @@
   (add-to-list 'default-frame-alist '(height . 62))
   (add-to-list 'default-frame-alist '(width . 135))
 
+  ;;(setq-default cursor-type '(bar . 1))
+  (setq-default cursor-type 'box)
+
+
   (defun half ()
     (interactive)
     (set-frame-parameter (selected-frame) 'width 110))

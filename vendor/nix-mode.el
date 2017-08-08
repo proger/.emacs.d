@@ -1,5 +1,6 @@
 ;;; nix-mode.el --- Major mode for editing Nix expressions
 
+;; contains smie code taken from https://github.com/DamienCassou/nix-mode/blob/master/nix-mode%2B.el
 ;; Author: Eelco Dolstra
 ;; URL: https://github.com/NixOS/nix/tree/master/misc/emacs
 ;; Version: 1.0
@@ -7,6 +8,60 @@
 ;;; Commentary:
 
 ;;; Code:
+
+;; (require 'smie)
+
+;; (defvar nix-smie-grammar
+;;   (smie-prec2->grammar
+;;    (smie-bnf->prec2
+;;     '((id)
+;;       (bind (id "=" exp))
+;;       (binds (binds ";" binds)
+;;              (bind))
+;;       (head
+;;        (id)
+;;        ("{" binds "}"))
+;;       (exp
+;;        (head)
+;;        ;;(exp "," exp)
+;;        ;;("rec" exp)
+;;        (head ":" exp)
+;;        ("if" exp "then" exp "else" exp)
+;;        ("let" binds "in" exp)
+;;        ("[" exps "]")
+;;        ("(" exps ")"))
+;;       (exps (exp)))
+;;     '(;;(assoc ",")
+;;       ;;(left ";")
+;;       (right ":")
+;;       ;;(nonassoc "rec")
+;;       (assoc "in")
+;;       (assoc "else")
+;;       )
+;;     '((assoc ",")
+;;       (assoc ";"))
+;;     )))
+
+;; (defun nix-smie-rules (kind token)
+;;   (pcase (cons kind token)
+;;     (`(:elem . basic)
+;;      nil)
+
+;;     (`(:after . "=")
+;;      smie-indent-basic)
+
+;;     ;; (`(,_ . "rec") (if (not (smie-rule-bolp)) (smie-rule-parent)))
+
+;;     ;; (`(:before . "let")
+;;     ;;  (if (and (not (smie-rule-bolp)) (smie-rule-prev-p "=")) (smie-rule-parent)))
+
+;;     ;; (`(:before . "in"))
+;;     ;;  (if (smie-rule-hanging-p) (smie-rule-parent))
+
+;;     (`(:before . ,(or `"(" `"{" `"["))
+;;      (if (smie-rule-hanging-p) (smie-rule-parent)))
+
+;;     ))
 
 (defconst nix-font-lock-keywords
   '("\\_<if\\_>" "\\_<then\\_>" "\\_<else\\_>" "\\_<assert\\_>" "\\_<with\\_>"
@@ -72,18 +127,22 @@ The hook `nix-mode-hook' is run when Nix mode is started.
   ;; Font lock support.
   (setq font-lock-defaults '(nix-font-lock-keywords nil nil nil nil))
 
-  ;; Automatic indentation [C-j].
-  (set (make-local-variable 'indent-line-function) 'nix-indent-line)
+  ;; ;; Automatic indentation [C-j].
+  ;; (set (make-local-variable 'indent-line-function) 'nix-indent-line)
 
   ;; Indenting of comments.
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-start-skip) "\\(^\\|\\s-\\);?#+ *")
 
-  ;; Filling of comments.
+  ;; ;; Filling of comments.
   (set (make-local-variable 'adaptive-fill-mode) t)
   (set (make-local-variable 'paragraph-start) "[ \t]*\\(#+[ \t]*\\)?$")
-  (set (make-local-variable 'paragraph-separate) paragraph-start))
+  (set (make-local-variable 'paragraph-separate) paragraph-start)
+
+  ;;(set (make-local-variable 'smie-indent-basic) 2)
+  ;;(smie-setup nix-smie-grammar 'nix-smie-rules)
+  )
 
 
 ;;;###autoload

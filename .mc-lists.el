@@ -25,6 +25,7 @@
         dumb-jump-go
         electric-newline-and-maybe-indent
         end-of-buffer
+        end-of-defun
         flycheck-next-error
         forward-sexp
         fsharp-ac/electric-dot
@@ -51,11 +52,13 @@
         wdired-next-line
         wdired-previous-line
         yaml-electric-backspace
+        yaml-electric-dash-and-dot
+        js2-mode-show-node
         ))
 
 (setq mc/cmds-to-run-once
       '(
-        js2-mode-show-node
+
         mac-mwheel-scroll
         yas-expand
         ))

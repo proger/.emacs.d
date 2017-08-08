@@ -168,7 +168,7 @@ static char *gnus-pointer[] = {
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (cql-mode emojify dash-functional cider helm projectile auctex julia-mode markdown-mode js2-mode company octave-mode highlight-sexp-mode elm-mode phi-search nameframe-projectile haskell-mode dumb-jump magit indy flycheck elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
+    (ac-cider typescript-mode flycheck-flow cql-mode emojify dash-functional helm projectile auctex julia-mode markdown-mode js2-mode company octave-mode highlight-sexp-mode elm-mode phi-search nameframe-projectile haskell-mode dumb-jump magit indy flycheck elpy yaml-mode ws-butler writeroom-mode window-number win-switch web-mode unipoint undo-tree tao-theme swift-mode spacemacs-theme solarized-theme sml-mode smartscan skewer-mode rainbow-delimiters puppet-mode popwin php-mode paredit org-trello org-tree-slide nyan-mode nodejs-repl nix-mode naquadah-theme monokai-theme molokai-theme markdown-toc leuven-theme latex-preview-pane js2-refactor js-comint ir-black-theme intero idris-mode idomenu highlight-sexp hemisu-theme helm-swoop helm-projectile helm-dired-recent-dirs helm-descbinds helm-cider helm-ag go-mode gnuplot-mode glsl-mode gist fstar-mode fsharp-mode flx-ido flatui-theme fill-column-indicator expand-region exec-path-from-shell ess-view erlang ein dockerfile-mode diminish dash-at-point cyberpunk-theme company-irony company-coq cmake-font-lock cider-spy cider-profile cider-decompile char-menu browse-at-remote auctex-latexmk ag ace-jump-mode)))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
  '(preview-auto-reveal
@@ -234,6 +234,7 @@ static char *gnus-pointer[] = {
  '(tab-width 4)
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
+ '(typescript-indent-level 2)
  '(vc-annotate-background "#ecf0f1")
  '(vc-annotate-color-map
    (quote
